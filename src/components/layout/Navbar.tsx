@@ -16,9 +16,9 @@ export function Navbar() {
 
     const navLinks = [
         { name: "Features", href: "/features" },
-        { name: "Why Us", href: "/why-us" },
-        { name: "About", href: "/about" },
-        { name: "Blog", href: "/blog" },
+        { name: "Pricing", href: "/pricing" },
+        { name: "Case Studies", href: "/case-studies" },
+        { name: "Compare Podium", href: "/compare/podium" },
     ];
 
     return (
@@ -37,7 +37,7 @@ export function Navbar() {
                 <div className="flex h-18 items-center justify-between py-4">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2.5 group">
-                        <img src="/logo.png" alt="ReviewHub Logo" className="w-8 h-8 object-contain" />
+                        <span className="text-2xl">⚡</span>
                         <span
                             className="text-lg font-bold tracking-tight"
                             style={{
@@ -50,42 +50,42 @@ export function Navbar() {
                             ReviewManagement
                         </span>
                     </Link>
-
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex md:items-center md:gap-8">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="text-sm font-medium transition-all duration-200 relative group"
-                                style={{ color: "rgba(203, 213, 225, 0.8)" }}
-                            >
-                                <span className="group-hover:text-white transition-colors">{link.name}</span>
-                                <span
-                                    className="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full transition-all duration-300"
-                                    style={{ background: "linear-gradient(90deg, #6366f1, #06b6d4)" }}
-                                />
-                            </Link>
-                        ))}
-                    </div>
-
-                    {/* CTA Buttons */}
-                    <div className="hidden md:flex md:items-center md:gap-3">
-                        <Link
-                            href="/dashboard"
-                            className="text-sm font-medium px-4 py-2 rounded-lg transition-all duration-200"
-                            style={{ color: "rgba(203, 213, 225, 0.8)" }}
-                        >
-                            Sign In
-                        </Link>
-                        <Link href="/dashboard">
-                            <button
-                                className="btn-primary text-sm font-semibold px-5 py-2.5 rounded-xl text-white cursor-pointer"
-                            >
-                                Start Free Trial →
-                            </button>
-                        </Link>
-                    </div>
+ 
+                     {/* Desktop Nav */}
+                     <div className="hidden md:flex md:items-center md:gap-8">
+                         {navLinks.map((link) => (
+                             <Link
+                                 key={link.name}
+                                 href={link.href}
+                                 className="text-sm font-medium transition-all duration-200 relative group"
+                                 style={{ color: "rgba(203, 213, 225, 0.8)" }}
+                             >
+                                 <span className="group-hover:text-white transition-colors">{link.name}</span>
+                                 <span
+                                     className="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full transition-all duration-300"
+                                     style={{ background: "linear-gradient(90deg, #6366f1, #06b6d4)" }}
+                                 />
+                             </Link>
+                         ))}
+                     </div>
+ 
+                     {/* CTA Buttons */}
+                     <div className="hidden md:flex md:items-center md:gap-3">
+                         <Link
+                             href="/login"
+                             className="text-sm font-medium px-4 py-2 rounded-lg transition-all duration-200 hover:text-white"
+                             style={{ color: "rgba(203, 213, 225, 0.8)" }}
+                         >
+                             Sign In
+                         </Link>
+                         <Link href="/register">
+                             <button
+                                 className="btn-primary text-sm font-semibold px-5 py-2.5 rounded-xl text-white cursor-pointer"
+                             >
+                                 Start Free Trial →
+                             </button>
+                         </Link>
+                     </div>
 
                     {/* Mobile Menu Button */}
                     <button
@@ -124,7 +124,7 @@ export function Navbar() {
                             </Link>
                         ))}
                         <div className="pt-4">
-                            <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                            <Link href="/register" onClick={() => setIsMenuOpen(false)}>
                                 <button className="btn-primary w-full text-sm font-semibold py-3 rounded-xl text-white">
                                     Start Free Trial →
                                 </button>

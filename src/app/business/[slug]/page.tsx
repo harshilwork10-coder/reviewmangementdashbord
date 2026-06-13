@@ -75,6 +75,7 @@ function InlineFeedbackBox({ business, onSubmitted }: { business: Business; onSu
                 rating: 3,
                 text: fbMsg.trim(),
                 source: "Direct Feedback",
+                isPrivate: true,
             });
             setFbDone(true);
             setFbSubmitting(false);
@@ -159,7 +160,7 @@ export default function BusinessPage() {
 
     const refresh = () => {
         const biz = getBusinessBySlug(slug);
-        if (biz) { setBusiness(biz); setReviews(getReviewsByBusiness(biz.id).filter(r => r.status !== "archived" && r.status !== "flagged")); }
+        if (biz) { setBusiness(biz); setReviews(getReviewsByBusiness(biz.id).filter(r => r.status !== "archived" && r.status !== "flagged" && r.isPrivate !== true)); }
     };
 
     useEffect(() => { refresh(); }, [slug]);
@@ -178,7 +179,8 @@ export default function BusinessPage() {
                 customerEmail: form.customerEmail,
                 rating: form.rating,
                 text: form.text,
-                source: "Direct"
+                source: "Direct",
+                isPrivate: form.rating <= 3
             });
             setSubmitted(true); setSubmitting(false);
             refresh();
@@ -275,9 +277,15 @@ export default function BusinessPage() {
                     <div className="glass-card rounded-2xl p-6 w-full max-w-lg border border-border">
                         {submitted ? (
                             <div className="text-center py-8">
-                                <div className="text-5xl mb-4">🎉</div>
-                                <h3 className="text-xl font-bold text-white mb-2">Thank You!</h3>
-                                <p className="text-muted-foreground text-sm mb-6">Your review has been submitted successfully.</p>
+                                <div className="text-5xl mb-4">{form.rating <= 3 ? "📩" : "🎉"}</div>
+                                <h3 className="text-xl font-bold text-white mb-2">
+                                    {form.rating <= 3 ? "Feedback Received" : "Thank You!"}
+                                </h3>
+                                <p className="text-muted-foreground text-sm mb-6 leading-relaxed max-w-md mx-auto">
+                                    {form.rating <= 3 
+                                        ? "Your feedback has been sent directly to management. We take your experience very seriously and will contact you shortly."
+                                        : "Your review has been submitted successfully."}
+                                </p>
                                 <button onClick={() => setShowForm(false)}
                                     className="px-6 py-2.5 rounded-xl btn-primary text-white font-semibold text-sm">Close</button>
                             </div>
@@ -285,8 +293,14 @@ export default function BusinessPage() {
                             <>
                                 <div className="flex items-center justify-between mb-5">
                                     <div>
-                                        <h3 className="text-lg font-bold text-white">Write a Review</h3>
-                                        <p className="text-xs text-muted-foreground mt-0.5">{business.name}</p>
+                                        <h3 className="text-lg font-bold text-white">
+                                            {form.rating > 0 && form.rating <= 3 ? "Share Your Private Feedback" : "Write a Review"}
+                                        </h3>
+                                        <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                                            {form.rating > 0 && form.rating <= 3
+                                                ? "We are so sorry we did not deliver a 5-star experience. Please send your feedback directly to our owners and managers so we can investigate and make this right immediately."
+                                                : business.name}
+                                        </p>
                                     </div>
                                     <button onClick={() => setShowForm(false)}><X className="w-5 h-5 text-muted-foreground hover:text-foreground" /></button>
                                 </div>
@@ -322,16 +336,24 @@ export default function BusinessPage() {
 
                                     {/* Comment */}
                                     <div>
-                                        <label className="block text-xs font-medium text-muted-foreground mb-1.5">Your Review *</label>
+                                        <label className="block text-xs font-medium text-muted-foreground mb-1.5">
+                                            {form.rating > 0 && form.rating <= 3 ? "Private Feedback *" : "Your Review *"}
+                                        </label>
                                         <textarea value={form.text} onChange={e => setForm(f => ({ ...f, text: e.target.value }))} required rows={4}
-                                            placeholder="Tell us about your experience — what did you love? What could be better?"
+                                            placeholder={form.rating > 0 && form.rating <= 3
+                                                ? "Please tell us what went wrong and how we can contact you or make this right..."
+                                                : "Tell us about your experience — what did you love? What could be better?"}
                                             className="w-full px-3 py-2.5 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary text-sm resize-none" />
                                     </div>
 
                                     <button type="submit" disabled={submitting || !form.customerName || !form.text || form.rating === 0}
                                         className="w-full py-3 rounded-xl btn-primary text-white font-semibold flex items-center justify-center gap-2 disabled:opacity-50 text-sm">
-                                        <Star className="w-4 h-4 fill-white" />
-                                        {submitting ? "Submitting..." : "Submit Review"}
+                                        {form.rating > 0 && form.rating <= 3 ? <Send className="w-4 h-4" /> : <Star className="w-4 h-4 fill-white" />}
+                                        {submitting 
+                                            ? "Submitting..." 
+                                            : form.rating > 0 && form.rating <= 3 
+                                                ? "Send Private Feedback" 
+                                                : "Submit Review"}
                                     </button>
                                 </form>
                             </>

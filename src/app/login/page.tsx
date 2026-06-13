@@ -45,7 +45,7 @@ export default function LoginPage() {
                         <div className="w-10 h-10 rounded-xl btn-primary flex items-center justify-center">
                             <Star className="w-5 h-5 text-white fill-white" />
                         </div>
-                        <span className="text-2xl font-bold gradient-text-primary">ReviewHub</span>
+                        <span className="text-2xl font-bold gradient-text-primary">ReviewManagement</span>
                     </Link>
                     <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
                     <p className="text-muted-foreground">Sign in to your account to continue</p>
@@ -93,7 +93,7 @@ export default function LoginPage() {
 
                     {/* Demo Login */}
                     <button
-                        onClick={() => handleLogin(null as any, "demo@reviewhub.com", "demo1234")}
+                        onClick={() => handleLogin(null as any, "demo@reviewmanagement.com", "demo1234")}
                         className="w-full py-3 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-400 font-semibold text-sm hover:bg-amber-500/20 transition-all flex items-center justify-center gap-2 mb-3"
                     >
                         <Zap className="w-4 h-4" />
@@ -103,12 +103,12 @@ export default function LoginPage() {
                     <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground bg-secondary/30 rounded-xl p-3">
                         <div>
                             <div className="font-medium text-foreground mb-1">🔴 Admin Login</div>
-                            <div>admin@reviewhub.com</div>
+                            <div>admin@reviewmanagement.com</div>
                             <div>admin1234</div>
                         </div>
                         <div>
                             <div className="font-medium text-foreground mb-1">🟣 Demo Merchant</div>
-                            <div>demo@reviewhub.com</div>
+                            <div>demo@reviewmanagement.com</div>
                             <div>demo1234</div>
                         </div>
                     </div>

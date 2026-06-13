@@ -54,12 +54,21 @@ export default function AdminMerchantsPage() {
                                     {biz.logo}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
+                                    <div className="flex items-center gap-2 mb-1 flex-wrap">
                                         <h3 className="font-bold text-white">{biz.name}</h3>
                                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${biz.status === "active" ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>
                                             {biz.status}
                                         </span>
                                         <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">{biz.category}</span>
+                                        <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-semibold border border-indigo-500/20 uppercase tracking-wider text-[10px]">{biz.subscriptionPlan || "starter"}</span>
+                                        <span className={`text-xs px-2 py-0.5 rounded-full font-semibold border text-[10px] ${
+                                            (biz.billingStatus || "paid") === "paid" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
+                                            (biz.billingStatus || "paid") === "past_due" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
+                                            (biz.billingStatus || "paid") === "paused" ? "bg-zinc-500/10 text-zinc-400 border-zinc-500/20" :
+                                            "bg-red-500/10 text-red-400 border-red-500/20"
+                                        }`}>
+                                            {(biz.billingStatus || "paid").toUpperCase()}
+                                        </span>
                                     </div>
                                     <p className="text-xs text-muted-foreground mb-2">{biz.address} · {biz.phone}</p>
                                     <div className="flex items-center gap-4 text-xs text-muted-foreground">

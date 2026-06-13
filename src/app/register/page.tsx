@@ -32,7 +32,7 @@ export default function RegisterPage() {
 
             const user = createUser({
                 email: form.email, password: form.password,
-                name: form.name, role: "merchant", businessId: bizId,
+                name: form.name, role: "owner", businessId: bizId,
             });
 
             saveBusiness({
@@ -41,6 +41,13 @@ export default function RegisterPage() {
                 phone: form.phone, website: "", address: form.address,
                 logo: "🏪", ownerId: user.id, status: "active",
                 createdAt: new Date().toISOString(),
+                isOnboarded: false,
+                trialStartDate: new Date().toISOString(),
+                googleConnected: false,
+                campaignCreated: false,
+                reviewRequestSent: false,
+                aiReplyGenerated: false,
+                subscriptionActivated: false,
             });
 
             await login(form.email, form.password);
@@ -62,7 +69,7 @@ export default function RegisterPage() {
                         <div className="w-10 h-10 rounded-xl btn-primary flex items-center justify-center">
                             <Star className="w-5 h-5 text-white fill-white" />
                         </div>
-                        <span className="text-2xl font-bold gradient-text-primary">ReviewHub</span>
+                        <span className="text-2xl font-bold gradient-text-primary">ReviewManagement</span>
                     </Link>
                     <h1 className="text-3xl font-bold text-white mb-2">Register your business</h1>
                     <p className="text-muted-foreground">Start collecting and managing reviews in minutes</p>

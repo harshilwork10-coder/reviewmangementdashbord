@@ -214,7 +214,7 @@ export function Hero() {
                                         <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #6366f1, #7c3aed)" }}>
                                             <Star className="h-3.5 w-3.5 text-white fill-white" />
                                         </div>
-                                        <span className="font-semibold text-sm text-white">ReviewHub</span>
+                                        <span className="font-semibold text-sm text-white">ReviewManagement</span>
                                     </div>
                                     {[
                                         { label: "Dashboard", active: true },

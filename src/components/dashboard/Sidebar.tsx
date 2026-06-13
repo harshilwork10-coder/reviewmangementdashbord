@@ -5,9 +5,9 @@ import Link from "next/link";
 import {
     LayoutDashboard, Star, BarChart3, Lightbulb,
     Settings, LogOut, Zap, ChevronRight, Globe,
-    Bell, CheckSquare, Send, Trophy, Users, Crosshair, Blocks
+    Bell, CheckSquare, Send, Trophy, Crosshair, Blocks
 } from "lucide-react";
-import { getBusinessByOwner } from "@/lib/store";
+import { getBusinessByOwner, getBusinessById, Business } from "@/lib/store";
 import { useEffect, useState } from "react";
 
 const NAV = [
@@ -25,32 +25,61 @@ const NAV = [
 ];
 
 export default function DashboardSidebar() {
-    const { user, logout, activeLocation, availableLocations, setActiveLocation } = useAuth();
+    const { user, logout, activeLocation, availableLocations, setActiveLocation, switchClientBusiness } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
     const [businessSlug, setBusinessSlug] = useState("");
+    const [business, setBusiness] = useState<Business | null>(null);
 
     useEffect(() => {
         if (user?.businessId) {
-            const biz = getBusinessByOwner(user.id);
-            if (biz) setBusinessSlug(biz.slug);
+            const biz = getBusinessById(user.businessId);
+            if (biz) {
+                setBusiness(biz);
+                setBusinessSlug(biz.slug);
+            }
         }
-    }, [user]);
+    }, [user, pathname]); // reload whenever path changes to capture mock updates
 
     const handleLogout = () => { logout(); router.push("/login"); };
+
+    // Trial Calculations
+    let trialDaysRemaining = 14;
+    let isTrialActive = false;
+    if (business && business.trialStartDate && !business.subscriptionActivated) {
+        isTrialActive = true;
+        const start = new Date(business.trialStartDate).getTime();
+        const diffDays = Math.floor((Date.now() - start) / 86400000);
+        trialDaysRemaining = Math.max(0, 14 - diffDays);
+    }
 
     return (
         <aside className="w-64 min-h-screen flex flex-col border-r border-border bg-card/30 backdrop-blur-xl">
             {/* Logo */}
             <div className="p-6 border-b border-border">
                 <Link href="/dashboard" className="flex items-center gap-2.5">
-                    <img src="/logo.png" alt="ReviewHub Logo" className="w-9 h-9 object-contain" />
-                    <span className="text-xl font-bold gradient-text-primary">ReviewHub</span>
+                    <span className="text-2xl">⚡</span>
+                    <span className="text-xl font-bold gradient-text-primary">ReviewManagement</span>
                 </Link>
             </div>
 
+            {/* Switched Client Agency Back Button */}
+            {user?.role === "agency" && typeof window !== "undefined" && sessionStorage.getItem("rms_agency_active_business_id") && (
+                <div className="mx-3 mt-3">
+                    <button
+                        onClick={() => {
+                            switchClientBusiness(null);
+                            router.push("/agency");
+                        }}
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold bg-primary/15 border border-primary/25 text-primary hover:bg-primary/25 transition-all"
+                    >
+                        Back to Agency Portal
+                    </button>
+                </div>
+            )}
+
             {/* Demo Banner */}
-            {user?.role === "demo" && (
+            {user?.id === "user-demo" && (
                 <div className="mx-3 mt-3 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center gap-2">
                     <Zap className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
                     <span className="text-xs text-amber-400 font-medium">Demo Account</span>
@@ -83,6 +112,19 @@ export default function DashboardSidebar() {
             <nav className="flex-1 p-3 space-y-1 mt-2">
                 {NAV.map(({ href, icon: Icon, label }) => {
                     const active = pathname === href;
+                    const isLocked = business && !business.isOnboarded && href !== "/dashboard/setup";
+                    if (isLocked) {
+                        return (
+                            <div key={href} 
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground/30 cursor-not-allowed select-none"
+                                title="Please complete setup wizard"
+                            >
+                                <Icon className="w-4 h-4 flex-shrink-0" />
+                                <span>{label}</span>
+                                <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/40">🔒</span>
+                            </div>
+                        );
+                    }
                     return (
                         <Link key={href} href={href}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group ${active
@@ -96,6 +138,29 @@ export default function DashboardSidebar() {
                     );
                 })}
             </nav>
+
+            {/* Trial Badge */}
+            {isTrialActive && business && (
+                <div className="mx-3 mb-2 p-3 rounded-2xl bg-gradient-to-br from-primary/10 to-cyan-500/10 border border-primary/20 space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] font-bold">
+                        <span className="text-white">Trial Period</span>
+                        <span className={`${
+                            trialDaysRemaining <= 3 ? "text-red-400 animate-pulse" : trialDaysRemaining <= 7 ? "text-amber-400" : "text-emerald-400"
+                        }`}>{trialDaysRemaining} days remaining</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
+                        <div 
+                            className={`h-full rounded-full transition-all duration-500 ${
+                                trialDaysRemaining <= 3 ? "bg-red-500 animate-pulse" : trialDaysRemaining <= 7 ? "bg-amber-500" : "bg-emerald-500"
+                            }`}
+                            style={{ width: `${(trialDaysRemaining / 14) * 100}%` }}
+                        />
+                    </div>
+                    <Link href="/dashboard/settings" className="w-full py-1.5 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary hover:text-primary-foreground rounded-lg text-[9px] font-bold text-center block transition-all">
+                        Upgrade Account
+                    </Link>
+                </div>
+            )}
 
             {/* Public link */}
             {businessSlug && (

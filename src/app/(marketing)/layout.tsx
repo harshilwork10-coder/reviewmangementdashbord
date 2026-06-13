@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ExitIntentModal } from "@/components/common/ExitIntentModal";
 
 export default function MarketingLayout({
     children,
@@ -13,6 +14,7 @@ export default function MarketingLayout({
                 {children}
             </main>
             <Footer />
+            <ExitIntentModal />
         </div>
     );
 }

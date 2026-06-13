@@ -2,6 +2,7 @@
 import { useAuth } from "@/lib/auth";
 import { useEffect, useState } from "react";
 import { getBusinessByOwner, getBusinessAnalytics } from "@/lib/store";
+import { Send, Sparkles, CreditCard, DollarSign, TrendingUp, MessageSquare } from "lucide-react";
 import {
     BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell,
     XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend
@@ -11,10 +12,17 @@ export default function AnalyticsPage() {
     const { user } = useAuth();
     const [analytics, setAnalytics] = useState<ReturnType<typeof getBusinessAnalytics> | null>(null);
 
-    useEffect(() => {
+    const refreshData = () => {
         if (!user) return;
         const biz = getBusinessByOwner(user.id);
         if (biz) setAnalytics(getBusinessAnalytics(biz.id));
+    };
+
+    useEffect(() => {
+        refreshData();
+        // Listen to plan updates or storage changes
+        window.addEventListener("storage", refreshData);
+        return () => window.removeEventListener("storage", refreshData);
     }, [user]);
 
     if (!analytics) return <div className="flex items-center justify-center h-screen"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>;
@@ -37,26 +45,49 @@ export default function AnalyticsPage() {
             <div className="p-8">
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-white">Analytics</h1>
-                    <p className="text-muted-foreground text-sm mt-1">Deep dive into your review performance</p>
+                    <p className="text-muted-foreground text-sm mt-1">Deep dive into your review performance and subscription usage statistics.</p>
                 </div>
 
-                {/* KPI Row */}
-                <div className="grid grid-cols-4 gap-4 mb-8">
+                {/* Reputation KPIs Row */}
+                <h3 className="text-sm font-bold text-white mb-4">Reputation & Review Metrics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                     {[
                         { label: "Total Reviews", value: analytics.total, color: "#6366f1" },
                         { label: "Average Rating", value: `${analytics.avgRating}★`, color: "#22c55e" },
                         { label: "Response Rate", value: `${analytics.responseRate}%`, color: "#06b6d4" },
                         { label: "Positive Reviews", value: `${Math.round((analytics.sentimentCounts.positive / Math.max(analytics.total, 1)) * 100)}%`, color: "#f59e0b" },
                     ].map(({ label, value, color }) => (
-                        <div key={label} className="glass-card rounded-2xl p-5">
-                            <div className="text-3xl font-bold mb-1" style={{ color }}>{value}</div>
-                            <div className="text-sm text-muted-foreground">{label}</div>
+                        <div key={label} className="glass-card rounded-2xl p-5 border border-border/60 hover:bg-white/5 transition-all">
+                            <div className="text-3xl font-bold mb-1 animate-pulse" style={{ color }}>{value}</div>
+                            <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{label}</div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Campaign & Usage KPIs Row */}
+                <h3 className="text-sm font-bold text-white mb-4">Campaign & Billing Usage</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    {[
+                        { label: "Invitations Sent", value: analytics.requestsSent, color: "#c084fc", icon: Send, sub: "Twilio / SendGrid volume" },
+                        { label: "AI Replies Drafted", value: analytics.aiRepliesGenerated, color: "#38bdf8", icon: Sparkles, sub: "OpenAI generation counts" },
+                        { label: "Subscription Tier", value: analytics.subscriptionPlan.toUpperCase(), color: "#f472b6", icon: CreditCard, sub: "Active billing plan" },
+                        { label: "Plan MRR Rate", value: `$${analytics.mrr}/mo`, color: "#34d399", icon: DollarSign, sub: "Monthly subscription cost" },
+                    ].map(({ label, value, color, icon: Icon, sub }) => (
+                        <div key={label} className="glass-card rounded-2xl p-5 border border-border/60 hover:bg-white/5 transition-all flex items-start justify-between">
+                            <div>
+                                <div className="text-3xl font-extrabold mb-1" style={{ color }}>{value}</div>
+                                <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">{label}</div>
+                                <div className="text-[10px] text-muted-foreground/60 mt-1">{sub}</div>
+                            </div>
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center border" style={{ borderColor: `${color}20`, background: `${color}10` }}>
+                                <Icon className="w-5 h-5" style={{ color }} />
+                            </div>
                         </div>
                     ))}
                 </div>
 
                 {/* Rating Trend */}
-                <div className="glass-card rounded-2xl p-6 mb-6">
+                <div className="glass-card rounded-2xl p-6 mb-6 border border-border/60">
                     <h2 className="text-sm font-semibold text-foreground mb-4">Rating Trend Over Time</h2>
                     <ResponsiveContainer width="100%" height={220}>
                         <AreaChart data={analytics.weeklyTrend}>
@@ -75,9 +106,9 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                     {/* Review Volume */}
-                    <div className="glass-card rounded-2xl p-6">
+                    <div className="glass-card rounded-2xl p-6 border border-border/60">
                         <h2 className="text-sm font-semibold text-foreground mb-4">Weekly Review Volume</h2>
                         <ResponsiveContainer width="100%" height={200}>
                             <BarChart data={analytics.weeklyTrend}>
@@ -91,7 +122,7 @@ export default function AnalyticsPage() {
                     </div>
 
                     {/* Rating Distribution */}
-                    <div className="glass-card rounded-2xl p-6">
+                    <div className="glass-card rounded-2xl p-6 border border-border/60">
                         <h2 className="text-sm font-semibold text-foreground mb-4">Rating Distribution</h2>
                         <ResponsiveContainer width="100%" height={200}>
                             <BarChart data={analytics.ratingDist} layout="vertical">
@@ -106,8 +137,8 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Sentiment + Response */}
-                <div className="grid grid-cols-3 gap-6">
-                    <div className="glass-card rounded-2xl p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="glass-card rounded-2xl p-6 border border-border/60">
                         <h2 className="text-sm font-semibold text-foreground mb-4">Sentiment Analysis</h2>
                         <ResponsiveContainer width="100%" height={160}>
                             <PieChart>
@@ -130,7 +161,7 @@ export default function AnalyticsPage() {
                         </div>
                     </div>
 
-                    <div className="glass-card rounded-2xl p-6">
+                    <div className="glass-card rounded-2xl p-6 border border-border/60">
                         <h2 className="text-sm font-semibold text-foreground mb-4">Response Rate</h2>
                         <ResponsiveContainer width="100%" height={160}>
                             <PieChart>
@@ -146,7 +177,7 @@ export default function AnalyticsPage() {
                         </div>
                     </div>
 
-                    <div className="glass-card rounded-2xl p-6">
+                    <div className="glass-card rounded-2xl p-6 border border-border/60">
                         <h2 className="text-sm font-semibold text-foreground mb-4">Top Keywords</h2>
                         <div className="flex flex-wrap gap-2">
                             {analytics.topKeywords.slice(0, 10).map(({ word, count }, i) => (

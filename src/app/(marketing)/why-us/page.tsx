@@ -11,14 +11,14 @@ export default function WhyUsPage() {
                     <Star className="w-4 h-4" /> The New Standard in Review Management
                 </div>
                 <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-6">
-                    Why Choose <span className="gradient-text-primary">ReviewHub?</span>
+                    Why Choose <span className="gradient-text-primary">ReviewManagement?</span>
                 </h1>
 
                 {/* The Value Proposition */}
                 <div className="max-w-3xl mx-auto bg-secondary/30 border border-primary/30 p-8 rounded-2xl backdrop-blur-sm relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-2 h-full bg-primary"></div>
                     <p className="text-xl md:text-2xl text-white font-medium leading-relaxed italic relative z-10">
-                        "Right now, motel owners get reviews in different places, miss negative feedback, reply late, and do not always know what problem is hurting their ratings most. This system puts everything in one place and helps turn reviews into more bookings and better operations."
+                        "Right now, business owners get reviews in different places, miss negative feedback, reply late, and do not always know what problem is hurting their ratings most. This system puts everything in one place and helps turn reviews into revenue, trust, and operational growth."
                     </p>
                     <div className="absolute -bottom-6 -right-6 text-primary/10">
                         <Star className="w-32 h-32" />
@@ -77,6 +77,82 @@ export default function WhyUsPage() {
                 </div>
             </div>
 
+            {/* The Openrize Advantage & Competitor Comparison */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl font-bold text-white mb-4">The Openrize Advantage</h2>
+                    <p className="text-muted-foreground max-w-2xl mx-auto">
+                        How we stack up against traditional reputation managers like Birdeye, Podium, and Broadly.
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Key Advantages */}
+                    <div className="space-y-6">
+                        {[
+                            {
+                                title: "Up to 60% Lower Cost",
+                                desc: "No multi-year lock-ins or hidden setup fees. Premium reputation management at a price that fits local businesses."
+                            },
+                            {
+                                title: "AI-Powered Contextual Replies",
+                                desc: "Our advanced AI writes custom, highly-contextual review drafts in seconds, maintaining your brand's unique voice."
+                            },
+                            {
+                                title: "Simpler Onboarding",
+                                desc: "Self-serve setup that gets your business up and running in minutes, not weeks of consultant meetings."
+                            },
+                            {
+                                title: "Agency-Friendly Multi-Tenancy",
+                                desc: "Robust white-label options and aggregate dashboards built specifically for agencies and franchise operators."
+                            },
+                            {
+                                title: "Openrize Ecosystem Integration",
+                                desc: "Seamless interoperability with adjacent business management apps in the Openrize family."
+                            }
+                        ].map((adv, idx) => (
+                            <div key={idx} className="flex gap-4">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center text-primary font-bold">
+                                    ✓
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-semibold text-white mb-1">{adv.title}</h4>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">{adv.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Comparison Card */}
+                    <div className="glass-card p-8 rounded-3xl border border-primary/20 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl" />
+                        <h3 className="text-xl font-bold text-white mb-6 text-center">Quick Comparison</h3>
+                        
+                        <div className="space-y-4 text-sm">
+                            <div className="grid grid-cols-3 font-semibold text-muted-foreground border-b border-border pb-3">
+                                <div>Feature</div>
+                                <div className="text-primary text-center">ReviewManagement</div>
+                                <div className="text-center">Competitors</div>
+                            </div>
+                            
+                            {[
+                                { name: "Pricing Model", us: "Affordable/Transparent", them: "High/Hidden Fees" },
+                                { name: "AI Reply Quality", us: "Contextual Drafts", them: "Templates Only" },
+                                { name: "Setup Time", us: "Self-serve (< 5 min)", them: "Assisted (Weeks)" },
+                                { name: "Agency Options", us: "White-label Portal", them: "Limited / Add-on" },
+                                { name: "Ecosystem Hooks", us: "Built-in", them: "Third-party APIs only" }
+                            ].map((row, idx) => (
+                                <div key={idx} className="grid grid-cols-3 py-2 border-b border-border/40">
+                                    <div className="text-white font-medium">{row.name}</div>
+                                    <div className="text-green-400 text-center font-medium">{row.us}</div>
+                                    <div className="text-muted-foreground text-center">{row.them}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* CTA */}
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div className="glass-card p-12 rounded-3xl border border-primary/30 relative overflow-hidden">
@@ -84,7 +160,7 @@ export default function WhyUsPage() {
                     <div className="relative z-10">
                         <h2 className="text-3xl font-bold text-white mb-6">Stop Reacting. Start Improving.</h2>
                         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                            Join the motel operators who are turning their online reputation into their biggest operational advantage.
+                            Join the business owners who are turning their online reputation into their biggest operational advantage.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link href="/register" className="px-8 py-4 rounded-xl btn-primary text-white font-bold text-lg inline-flex items-center justify-center gap-2 hover:scale-105 transition-transform">

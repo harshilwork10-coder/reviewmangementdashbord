@@ -5,16 +5,21 @@ import { getBusinessByOwner, Business } from "@/lib/store";
 import { Blocks, CheckCircle2, Webhook, KeyRound, AlertCircle, RefreshCw } from "lucide-react";
 
 const INTEGRATIONS = [
-    { id: "pms-opera", name: "Oracle Opera PMS", category: "Enterprise PMS", active: false },
-    { id: "pms-cloudbeds", name: "Cloudbeds", category: "Hospitality Cloud", active: true },
-    { id: "pms-mews", name: "Mews", category: "Modern PMS", active: false },
-    { id: "pms-guesty", name: "Guesty", category: "Short Term Rentals", active: false },
-    { id: "pos-toast", name: "Toast POS", category: "Restaurant POS", active: false },
-    { id: "pos-square", name: "Square", category: "Retail POS", active: false },
+    { id: "gbp", name: "Google Business Profile", category: "Review Source", active: true, desc: "Monitor and respond to Google Reviews directly from your dashboard." },
+    { id: "stripe", name: "Stripe", category: "Payment Gateway", active: true, desc: "Synchronize customer billing profiles and upgrade subscription tiers." },
+    { id: "openai", name: "OpenAI", category: "Artificial Intelligence", active: true, desc: "Power the AI Reply Assistant with customized tone generation." },
+    { id: "twilio", name: "Twilio", category: "SMS Provider", active: false, desc: "Send SMS review request campaigns directly to customer phone numbers." },
+    { id: "sendgrid", name: "SendGrid", category: "Email Service", active: false, desc: "Send email review invitation automations from your custom domain." },
+];
+
+const FUTURE_INTEGRATIONS = [
+    { name: "HubSpot", category: "CRM Integration", desc: "Trigger feedback requests automatically when a deal closes." },
+    { name: "Salesforce", category: "Enterprise CRM", desc: "Sync customer satisfaction metrics with contact records." },
+    { name: "Zapier", category: "Workflow Automation", desc: "Connect ReviewManagement with over 5,000+ business applications." }
 ];
 
 export default function IntegrationsPage() {
-    const { user } = useAuth();
+    const { user, hasPermission } = useAuth();
     const [business, setBusiness] = useState<Business | null>(null);
     const [integrations, setIntegrations] = useState(INTEGRATIONS);
     const [simulating, setSimulating] = useState(false);
@@ -30,6 +35,7 @@ export default function IntegrationsPage() {
     useEffect(() => { refresh(); }, [user]);
 
     const handleToggle = (id: string, current: boolean) => {
+        if (!hasPermission("billing")) return;
         setIntegrations(prev => prev.map(i => i.id === id ? { ...i, active: !current } : i));
     };
 
@@ -47,12 +53,14 @@ export default function IntegrationsPage() {
         return <div className="flex items-center justify-center p-12"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>;
     }
 
+    const canManage = hasPermission("billing");
+
     return (
         <div className="p-8 h-screen overflow-y-auto">
             <div className="flex items-center justify-between mb-8">
                 <div>
                     <h1 className="text-2xl font-bold text-white mb-1">App Integrations</h1>
-                    <p className="text-muted-foreground text-sm">Connect your Property Management or Point of Sale systems to automate review requests.</p>
+                    <p className="text-muted-foreground text-sm">Connect your Property Management, billing, or messaging providers to power review requests.</p>
                 </div>
             </div>
 
@@ -82,7 +90,8 @@ export default function IntegrationsPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <h2 className="text-lg font-bold text-white mb-4">Active & Connected Apps</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
                 {integrations.map(integ => (
                     <div key={integ.id} className="glass-card rounded-2xl p-6 border border-border flex flex-col items-start transition-all hover:bg-white/5">
                         <div className="flex w-full items-start justify-between mb-4">
@@ -94,12 +103,17 @@ export default function IntegrationsPage() {
                             </span>
                         </div>
                         <h3 className="text-lg font-bold text-white mb-1">{integ.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-6">{integ.category}</p>
+                        <p className="text-xs text-primary mb-3">{integ.category}</p>
+                        <p className="text-xs text-muted-foreground mb-6 leading-relaxed">{integ.desc}</p>
 
                         <div className="mt-auto w-full pt-4 border-t border-border/50 flex">
-                            {integ.active ? (
+                            {!canManage ? (
+                                <div className="text-center w-full py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-xs font-semibold">
+                                    Owner permission required
+                                </div>
+                            ) : integ.active ? (
                                 <button onClick={() => handleToggle(integ.id, integ.active)} className="w-full py-2.5 rounded-xl text-sm font-medium border border-border bg-secondary hover:bg-secondary/50 transition-colors text-white">
-                                    Configure Settings
+                                    Disconnect App
                                 </button>
                             ) : (
                                 <button onClick={() => handleToggle(integ.id, integ.active)} className="w-full py-2.5 rounded-xl text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
@@ -107,6 +121,21 @@ export default function IntegrationsPage() {
                                 </button>
                             )}
                         </div>
+                    </div>
+                ))}
+            </div>
+
+            <h2 className="text-lg font-bold text-white mb-4">Upcoming / Future Integrations</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {FUTURE_INTEGRATIONS.map(integ => (
+                    <div key={integ.name} className="glass-card rounded-2xl p-6 border border-border/50 flex flex-col items-start opacity-70">
+                        <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center border border-border mb-4">
+                            <Blocks className="w-6 h-6 text-muted-foreground/50" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white/80 mb-1">{integ.name}</h3>
+                        <p className="text-xs text-muted-foreground mb-3">{integ.category}</p>
+                        <p className="text-xs text-muted-foreground/60 leading-relaxed mb-4">{integ.desc}</p>
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-secondary/50 border border-border text-muted-foreground/60 uppercase font-bold tracking-wider mt-auto">Coming Soon</span>
                     </div>
                 ))}
             </div>

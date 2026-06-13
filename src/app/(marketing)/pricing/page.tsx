@@ -16,20 +16,26 @@ export default function PricingPage() {
             name: "Starter",
             description: "Perfect for small local businesses getting started.",
             price: "$29",
-            features: ["1 Location", "100 Review Requests/mo", "Email Support", "Basic Analytics"],
+            features: ["1 Location", "Basic Monitoring", "Review Requests", "Email Support"],
         },
         {
-            name: "Professional",
+            name: "Growth",
             description: "Ideal for growing businesses with multiple locations.",
             price: "$79",
-            features: ["5 Locations", "Unlimited Requests", "Priority Email Support", "Advanced Analytics", "SMS Campaigns"],
+            features: ["Multiple Locations", "AI Replies", "Advanced Reporting", "Priority Support"],
             popular: true,
+        },
+        {
+            name: "Agency",
+            description: "Tailored for marketing agencies managing multiple clients.",
+            price: "$199",
+            features: ["Multi-Client Management", "White-Label Reporting", "Custom branding", "API Access"],
         },
         {
             name: "Enterprise",
             description: "For large organizations needing custom solutions.",
             price: "Custom",
-            features: ["Unlimited Locations", "API Access", "Dedicated Success Manager", "White-label Options", "SLA Support"],
+            features: ["Custom Integrations", "Dedicated Support", "Advanced Permissions", "SLA Support"],
         },
     ];
 
@@ -41,7 +47,7 @@ export default function PricingPage() {
             />
 
             <section className="container py-24 px-4 md:px-6 mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                     {plans.map((plan, index) => (
                         <Card
                             key={index}

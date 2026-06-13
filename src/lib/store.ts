@@ -2,7 +2,24 @@
 // MOCK DATA STORE — localStorage backed
 // ============================================================
 
-export type Role = "admin" | "merchant" | "demo";
+export type Role = "admin" | "agency" | "owner" | "manager" | "readonly";
+
+export interface Permission {
+  canView: boolean;
+  canCreate: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  canManageBilling: boolean;
+  canManageUsers: boolean;
+}
+
+export const ROLE_PERMISSIONS: Record<Role, Permission> = {
+  admin: { canView: true, canCreate: true, canEdit: true, canDelete: true, canManageBilling: true, canManageUsers: true },
+  agency: { canView: true, canCreate: true, canEdit: true, canDelete: true, canManageBilling: true, canManageUsers: true },
+  owner: { canView: true, canCreate: true, canEdit: true, canDelete: true, canManageBilling: true, canManageUsers: true },
+  manager: { canView: true, canCreate: true, canEdit: true, canDelete: false, canManageBilling: false, canManageUsers: false },
+  readonly: { canView: true, canCreate: false, canEdit: false, canDelete: false, canManageBilling: false, canManageUsers: false },
+};
 
 export interface User {
   id: string;
@@ -13,6 +30,9 @@ export interface User {
   businessId?: string;
   locationId?: string;
   createdAt: string;
+  status?: "active" | "disabled";
+  agencyId?: string;
+  agencyRole?: "owner" | "manager" | "staff" | "readonly";
 }
 
 export interface Business {
@@ -28,6 +48,19 @@ export interface Business {
   ownerId: string;
   status: "active" | "suspended";
   createdAt: string;
+  subscriptionPlan?: "starter" | "growth" | "agency" | "enterprise";
+  billingStatus?: "paid" | "past_due" | "unpaid" | "paused";
+  isFranchise?: boolean;
+  agencyId?: string;
+  isArchived?: boolean;
+  brandVoice?: string;
+  isOnboarded?: boolean;
+  trialStartDate?: string;
+  googleConnected?: boolean;
+  campaignCreated?: boolean;
+  reviewRequestSent?: boolean;
+  aiReplyGenerated?: boolean;
+  subscriptionActivated?: boolean;
 }
 
 export interface Location {
@@ -44,6 +77,71 @@ export interface Competitor {
   name: string;
   currentRating: number;
   totalReviews: number;
+}
+
+export interface SupportTicket {
+  id: string;
+  businessId: string;
+  subject: string;
+  description: string;
+  priority: "P1" | "P2" | "P3" | "P4";
+  status: "open" | "assigned" | "escalated" | "resolved";
+  assignedTo?: string;
+  csat?: number;
+  createdAt: string;
+}
+
+export interface FeatureFlag {
+  key: string;
+  description: string;
+  enabled: boolean;
+  isBeta: boolean;
+  targetOrgs: string[];
+  targetPlans: string[];
+}
+
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  type: "notice" | "feature" | "disruption";
+  targetOrgs: string[];
+  targetPlans: string[];
+  createdAt: string;
+}
+
+export interface PlatformHealth {
+  api: "healthy" | "degraded" | "down";
+  database: "healthy" | "degraded" | "down";
+  sync: "healthy" | "degraded" | "down";
+  email: "healthy" | "degraded" | "down";
+  sms: "healthy" | "degraded" | "down";
+  openai: "healthy" | "degraded" | "down";
+  stripe: "healthy" | "degraded" | "down";
+  lastChecked: string;
+}
+
+export interface AuditLog {
+  id: string;
+  userId?: string;
+  userName?: string;
+  businessId?: string;
+  action: string;
+  ipAddress: string;
+  userAgent: string;
+  metadata?: any;
+  createdAt: string;
+}
+
+export interface Agency {
+  id: string;
+  name: string;
+  logo: string;
+  primaryColor: string;
+  secondaryColor: string;
+  ownerId: string;
+  plan: "starter" | "growth" | "enterprise";
+  createdAt: string;
 }
 
 export interface Review {
@@ -64,6 +162,7 @@ export interface Review {
   assignedTo?: string; // user ID
   locationId?: string;
   createdAt: string;
+  isPrivate?: boolean;
 }
 
 export interface IssueTask {
@@ -127,6 +226,17 @@ const SEED_BUSINESSES: Business[] = [
     ownerId: "user-demo",
     status: "active",
     createdAt: "2024-01-15T10:00:00Z",
+    subscriptionPlan: "growth",
+    isFranchise: false,
+    agencyId: "agency-001",
+    brandVoice: "We are warm, culinary-focused, professional, and use emojis like 🍽️ and 🌟. We always thank the guest and refer to our fresh ingredients.",
+    isOnboarded: true,
+    trialStartDate: "2026-06-01T12:00:00Z",
+    googleConnected: true,
+    campaignCreated: true,
+    reviewRequestSent: true,
+    aiReplyGenerated: true,
+    subscriptionActivated: true,
   },
   {
     id: "biz-002",
@@ -141,6 +251,16 @@ const SEED_BUSINESSES: Business[] = [
     ownerId: "user-merch-002",
     status: "active",
     createdAt: "2024-02-01T10:00:00Z",
+    subscriptionPlan: "starter",
+    isFranchise: false,
+    agencyId: "agency-001",
+    isOnboarded: true,
+    trialStartDate: "2026-06-01T12:00:00Z",
+    googleConnected: true,
+    campaignCreated: true,
+    reviewRequestSent: true,
+    aiReplyGenerated: true,
+    subscriptionActivated: true,
   },
   {
     id: "biz-003",
@@ -155,6 +275,16 @@ const SEED_BUSINESSES: Business[] = [
     ownerId: "user-merch-003",
     status: "active",
     createdAt: "2024-02-15T10:00:00Z",
+    subscriptionPlan: "agency",
+    isFranchise: true,
+    agencyId: "agency-001",
+    isOnboarded: true,
+    trialStartDate: "2026-06-01T12:00:00Z",
+    googleConnected: true,
+    campaignCreated: true,
+    reviewRequestSent: true,
+    aiReplyGenerated: true,
+    subscriptionActivated: true,
   },
   {
     id: "biz-004",
@@ -169,6 +299,15 @@ const SEED_BUSINESSES: Business[] = [
     ownerId: "user-merch-004",
     status: "suspended",
     createdAt: "2024-03-01T10:00:00Z",
+    subscriptionPlan: "enterprise",
+    isFranchise: false,
+    isOnboarded: true,
+    trialStartDate: "2026-06-01T12:00:00Z",
+    googleConnected: true,
+    campaignCreated: true,
+    reviewRequestSent: true,
+    aiReplyGenerated: true,
+    subscriptionActivated: true,
   },
 ];
 
@@ -243,22 +382,31 @@ const generateReviews = (): Review[] => {
       source: getRandomSource(),
       isUrgent: r.rating <= 2,
       assignedTo: staffAssignments[i],
-      locationId
+      locationId,
+      createdAt: daysAgo(i * 2),
+      repliedAt: r.reply ? daysAgo(Math.max(0, i * 2 - 1)) : undefined
     };
   });
 };
 
 const SEED_USERS: User[] = [
-  { id: "user-admin", email: "admin@reviewhub.com", password: "admin1234", name: "Alex Rivera", role: "admin", createdAt: "2024-01-01T00:00:00Z" },
-  { id: "user-demo", email: "demo@reviewhub.com", password: "demo1234", name: "Demo Merchant", role: "demo", businessId: "biz-001", createdAt: "2024-01-15T00:00:00Z" },
-  { id: "user-merch-002", email: "merchant2@reviewhub.com", password: "pass1234", name: "Roberto Diaz", role: "merchant", businessId: "biz-002", createdAt: "2024-02-01T00:00:00Z" },
-  { id: "user-merch-003", email: "merchant3@reviewhub.com", password: "pass1234", name: "Linda Chen", role: "merchant", businessId: "biz-003", createdAt: "2024-02-15T00:00:00Z" },
-  { id: "user-merch-004", email: "merchant4@reviewhub.com", password: "pass1234", name: "Omar Hassan", role: "merchant", businessId: "biz-004", createdAt: "2024-03-01T00:00:00Z" },
+  { id: "user-admin", email: "admin@reviewmanagement.com", password: "admin1234", name: "Alex Rivera", role: "admin", createdAt: "2024-01-01T00:00:00Z" },
+  { id: "user-agency", email: "agency@reviewmanagement.com", password: "agency1234", name: "Sarah Agency", role: "agency", businessId: "biz-001", createdAt: "2024-01-10T00:00:00Z", agencyId: "agency-001", agencyRole: "owner" },
+  { id: "user-agency-mgr", email: "agency_mgr@reviewmanagement.com", password: "agency1234", name: "John Manager", role: "agency", createdAt: "2024-01-12T00:00:00Z", agencyId: "agency-001", agencyRole: "manager" },
+  { id: "user-agency-staff", email: "agency_staff@reviewmanagement.com", password: "agency1234", name: "Alice Assistant", role: "agency", createdAt: "2024-01-13T00:00:00Z", agencyId: "agency-001", agencyRole: "staff" },
+  { id: "user-agency-ro", email: "agency_ro@reviewmanagement.com", password: "agency1234", name: "Bob Viewer", role: "agency", createdAt: "2024-01-14T00:00:00Z", agencyId: "agency-001", agencyRole: "readonly" },
+  { id: "user-owner", email: "owner@reviewmanagement.com", password: "owner1234", name: "Marc Owner", role: "owner", businessId: "biz-001", createdAt: "2024-01-15T00:00:00Z" },
+  { id: "user-manager", email: "manager@reviewmanagement.com", password: "manager1234", name: "Dave Manager", role: "manager", businessId: "biz-001", locationId: "loc-001", createdAt: "2024-01-20T00:00:00Z" },
+  { id: "user-readonly", email: "readonly@reviewmanagement.com", password: "readonly1234", name: "Emma ReadOnly", role: "readonly", businessId: "biz-001", createdAt: "2024-01-25T00:00:00Z" },
+  { id: "user-demo", email: "demo@reviewmanagement.com", password: "demo1234", name: "Demo Merchant", role: "owner", businessId: "biz-001", createdAt: "2024-01-15T00:00:00Z" },
+  { id: "user-merch-002", email: "merchant2@reviewmanagement.com", password: "pass1234", name: "Roberto Diaz", role: "owner", businessId: "biz-002", createdAt: "2024-02-01T00:00:00Z" },
+  { id: "user-merch-003", email: "merchant3@reviewmanagement.com", password: "pass1234", name: "Linda Chen", role: "owner", businessId: "biz-003", createdAt: "2024-02-15T00:00:00Z" },
+  { id: "user-merch-004", email: "merchant4@reviewmanagement.com", password: "pass1234", name: "Omar Hassan", role: "owner", businessId: "biz-004", createdAt: "2024-03-01T00:00:00Z" },
   // biz-001 staff for leaderboard
-  { id: "user-staff-001", email: "jessica@stellarbistro.com", password: "pass1234", name: "Jessica Torres", role: "merchant", businessId: "biz-001", locationId: "loc-001", createdAt: "2024-04-01T00:00:00Z" },
-  { id: "user-staff-002", email: "mark@stellarbistro.com", password: "pass1234", name: "Mark Johnson", role: "merchant", businessId: "biz-001", locationId: "loc-001", createdAt: "2024-04-15T00:00:00Z" },
-  { id: "user-staff-003", email: "priya@stellarbistro.com", password: "pass1234", name: "Priya Patel", role: "merchant", businessId: "biz-001", locationId: "loc-002", createdAt: "2024-05-01T00:00:00Z" },
-  { id: "user-staff-004", email: "carlos@stellarbistro.com", password: "pass1234", name: "Carlos Mendez", role: "merchant", businessId: "biz-001", locationId: "loc-002", createdAt: "2024-05-15T00:00:00Z" },
+  { id: "user-staff-001", email: "jessica@stellarbistro.com", password: "pass1234", name: "Jessica Torres", role: "manager", businessId: "biz-001", locationId: "loc-001", createdAt: "2024-04-01T00:00:00Z" },
+  { id: "user-staff-002", email: "mark@stellarbistro.com", password: "pass1234", name: "Mark Johnson", role: "manager", businessId: "biz-001", locationId: "loc-001", createdAt: "2024-04-15T00:00:00Z" },
+  { id: "user-staff-003", email: "priya@stellarbistro.com", password: "pass1234", name: "Priya Patel", role: "manager", businessId: "biz-001", locationId: "loc-002", createdAt: "2024-05-01T00:00:00Z" },
+  { id: "user-staff-004", email: "carlos@stellarbistro.com", password: "pass1234", name: "Carlos Mendez", role: "manager", businessId: "biz-001", locationId: "loc-002", createdAt: "2024-05-15T00:00:00Z" },
 ];
 
 // ============================================================
@@ -336,16 +484,73 @@ const SEED_CAMPAIGNS: ReviewRequestCampaign[] = [
 // ============================================================
 // STORAGE KEYS
 // ============================================================
-const KEY_INITIALIZED = "rms_initialized_v3";
+const KEY_INITIALIZED = "rms_initialized_v7";
 
 const KEY_USERS = "rms_users";
 const KEY_BUSINESSES = "rms_businesses";
+const KEY_AGENCY = "rms_agency";
 const KEY_REVIEWS = "rms_reviews";
 const KEY_TASKS = "rms_tasks";
 const KEY_ALERTS = "rms_alerts";
 const KEY_CAMPAIGNS = "rms_campaigns";
 const KEY_LOCATIONS = "rms_locations";
 const KEY_COMPETITORS = "rms_competitors";
+const KEY_TICKETS = "rms_tickets";
+const KEY_FLAGS = "rms_feature_flags";
+const KEY_ANNOUNCEMENTS = "rms_announcements";
+const KEY_HEALTH = "rms_health";
+const KEY_AUDIT_LOGS = "rms_audit_logs";
+
+// Mock operational seeds
+const SEED_TICKETS: SupportTicket[] = [
+  { id: "tick-001", businessId: "biz-001", subject: "Stripe Payment Failure Warning", description: "Our credit card expired and we received an email warning. We updated card info but dashboard still shows past due. Can you verify if the payment went through?", priority: "P1", status: "open", assignedTo: "Alex Rivera", createdAt: daysAgo(1) },
+  { id: "tick-002", businessId: "biz-002", subject: "Twilio Configuration Error", description: "Getting 'SMS dispatch failed' error when launching campaigns. Twilio account seems connected but messages are not arriving.", priority: "P2", status: "escalated", assignedTo: "Jessica Torres", createdAt: daysAgo(3) },
+  { id: "tick-003", businessId: "biz-003", subject: "Questions on Multi-Location Setup", description: "We are trying to add our new location in Chicago. The system says we reached our limit. We are on the Growth plan. Can you check?", priority: "P3", status: "assigned", assignedTo: "Mark Johnson", createdAt: daysAgo(5) },
+  { id: "tick-004", businessId: "biz-001", subject: "AI reply language support", description: "Does the AI Reply system support responding to Spanish reviews?", priority: "P4", status: "resolved", assignedTo: "Alex Rivera", csat: 5, createdAt: daysAgo(8) },
+];
+
+const SEED_FEATURE_FLAGS: FeatureFlag[] = [
+  { key: "ai-auto-approve", description: "Allow AI replies to be approved and sent automatically without manual click.", enabled: false, isBeta: true, targetOrgs: [], targetPlans: ["enterprise"] },
+  { key: "competitor-sentiment-analysis", description: "Analyze competitor review sentiments and compare directly on charts.", enabled: true, isBeta: false, targetOrgs: ["biz-001", "biz-003"], targetPlans: ["growth", "agency", "enterprise"] },
+  { key: "hubspot-sync-beta", description: "Sync customer ratings and reviews directly with HubSpot CRM deals.", enabled: false, isBeta: true, targetOrgs: ["biz-001"], targetPlans: [] },
+  { key: "sms-custom-phone-number", description: "Allow organizations to connect custom Twilio shortcodes/numbers.", enabled: true, isBeta: false, targetOrgs: [], targetPlans: ["agency", "enterprise"] }
+];
+
+const SEED_ANNOUNCEMENTS: Announcement[] = [
+  { id: "ann-001", title: "Scheduled Maintenance: Google Business Profile API Sync Window", content: "Google will be undergoing routine API maintenance this Sunday from 02:00 to 04:00 EST. Review imports might experience brief delays.", type: "notice", targetOrgs: [], targetPlans: [], createdAt: daysAgo(2) },
+  { id: "ann-002", title: "New Feature: AI Tone Control & Saved Draft Workflows", content: "You can now customize AI generated replies using Friendly, Professional, or Apologetic tones, and save them as drafts first!", type: "feature", targetOrgs: [], targetPlans: ["growth", "agency", "enterprise"], createdAt: daysAgo(5) }
+];
+
+const SEED_HEALTH: PlatformHealth = {
+  api: "healthy",
+  database: "healthy",
+  sync: "healthy",
+  email: "healthy",
+  sms: "healthy",
+  openai: "healthy",
+  stripe: "healthy",
+  lastChecked: new Date().toISOString()
+};
+
+const SEED_AUDIT_LOGS: AuditLog[] = [
+  { id: "audit-001", userId: "user-owner", userName: "Marc Owner", businessId: "biz-001", action: "Billing Tier Changed", ipAddress: "192.168.1.50", userAgent: "Mozilla/5.0 Chrome/124.0.0.0", metadata: { oldPlan: "starter", newPlan: "growth" }, createdAt: daysAgo(1) },
+  { id: "audit-002", userId: "user-manager", userName: "Dave Manager", businessId: "biz-001", action: "Review Reply Published", ipAddress: "192.168.1.100", userAgent: "Mozilla/5.0 Firefox/125.0", metadata: { reviewId: "rev-001", repliedBy: "Owner" }, createdAt: daysAgo(2) },
+  { id: "audit-003", userId: "user-admin", userName: "Alex Rivera", action: "Feature Flag Toggled", ipAddress: "10.0.0.12", userAgent: "Mozilla/5.0 Safari/605.1.15", metadata: { flagKey: "competitor-sentiment-analysis", enabled: true }, createdAt: daysAgo(3) },
+  { id: "audit-004", userId: "user-owner", userName: "Marc Owner", businessId: "biz-001", action: "Location Added", ipAddress: "192.168.1.50", userAgent: "Mozilla/5.0 Chrome/124.0.0.0", metadata: { locationId: "loc-002", name: "O'Hare Airport" }, createdAt: daysAgo(10) }
+];
+
+const SEED_AGENCIES: Agency[] = [
+  {
+    id: "agency-001",
+    name: "Apex Reputation Partners",
+    logo: "🚀",
+    primaryColor: "#ef4444",
+    secondaryColor: "#3b82f6",
+    ownerId: "user-agency",
+    plan: "growth",
+    createdAt: daysAgo(30)
+  }
+];
 
 // ============================================================
 // INIT
@@ -361,7 +566,55 @@ export function initStore() {
   localStorage.setItem(KEY_TASKS, JSON.stringify(SEED_TASKS));
   localStorage.setItem(KEY_ALERTS, JSON.stringify(SEED_ALERTS));
   localStorage.setItem(KEY_CAMPAIGNS, JSON.stringify(SEED_CAMPAIGNS));
+  localStorage.setItem(KEY_TICKETS, JSON.stringify(SEED_TICKETS));
+  localStorage.setItem(KEY_FLAGS, JSON.stringify(SEED_FEATURE_FLAGS));
+  localStorage.setItem(KEY_ANNOUNCEMENTS, JSON.stringify(SEED_ANNOUNCEMENTS));
+  localStorage.setItem(KEY_HEALTH, JSON.stringify(SEED_HEALTH));
+  localStorage.setItem(KEY_AUDIT_LOGS, JSON.stringify(SEED_AUDIT_LOGS));
+  localStorage.setItem(KEY_AGENCY, JSON.stringify(SEED_AGENCIES));
   localStorage.setItem(KEY_INITIALIZED, "true");
+}
+
+// ============================================================
+// AGENCIES & WHITE LABEL GATES
+// ============================================================
+export function getAgencies(): Agency[] {
+  if (typeof window === "undefined") return SEED_AGENCIES;
+  return JSON.parse(localStorage.getItem(KEY_AGENCY) || "[]");
+}
+
+export function getAgencyById(id: string): Agency | undefined {
+  return getAgencies().find(a => a.id === id);
+}
+
+export function saveAgency(agency: Agency): void {
+  const all = getAgencies();
+  const idx = all.findIndex(a => a.id === agency.id);
+  if (idx >= 0) all[idx] = agency;
+  else all.push(agency);
+  localStorage.setItem(KEY_AGENCY, JSON.stringify(all));
+}
+
+export function getBusinessesByAgency(agencyId: string): Business[] {
+  return getBusinesses().filter(b => b.agencyId === agencyId && !b.isArchived);
+}
+
+export function getAgencyTeam(agencyId: string): User[] {
+  return getUsers().filter(u => u.agencyId === agencyId);
+}
+
+export function addBusiness(data: Omit<Business, "id" | "createdAt" | "status">): Business {
+  const all = getBusinesses();
+  const newBiz: Business = {
+    ...data,
+    id: `biz-${Date.now()}`,
+    status: "active",
+    createdAt: new Date().toISOString()
+  };
+  all.push(newBiz);
+  localStorage.setItem(KEY_BUSINESSES, JSON.stringify(all));
+  addAuditLog("Client Business Added", newBiz.id, undefined, { name: newBiz.name });
+  return newBiz;
 }
 
 export function resetStore() {
@@ -384,6 +637,37 @@ export function getLocationById(id: string): Location | undefined {
 
 export function getLocationsByBusiness(businessId: string): Location[] {
   return getLocations().filter(l => l.businessId === businessId);
+}
+
+export function addLocation(data: Omit<Location, "id" | "createdAt">): Location | null {
+  if (typeof window === "undefined") return null;
+  const locations = getLocations();
+  
+  // Enforce subscription plan location limits
+  const planLimits: Record<string, number> = { starter: 1, growth: 5, agency: 9999, enterprise: 9999 };
+  const biz = getBusinessById(data.businessId);
+  const activePlan = biz?.subscriptionPlan || "starter";
+  const limit = planLimits[activePlan];
+  const currentCount = locations.filter(l => l.businessId === data.businessId).length;
+  
+  if (currentCount >= limit) {
+    return null;
+  }
+
+  const newLoc: Location = {
+    ...data,
+    id: `loc-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+  };
+  locations.push(newLoc);
+  localStorage.setItem(KEY_LOCATIONS, JSON.stringify(locations));
+  return newLoc;
+}
+
+export function deleteLocation(id: string): void {
+  if (typeof window === "undefined") return;
+  const locations = getLocations().filter(l => l.id !== id);
+  localStorage.setItem(KEY_LOCATIONS, JSON.stringify(locations));
 }
 
 // ============================================================
@@ -439,16 +723,35 @@ export function getUserByEmail(email: string): User | undefined {
 
 export function authenticate(email: string, password: string): User | null {
   const user = getUserByEmail(email);
-  if (user && user.password === password) return user;
+  if (user && user.password === password && user.status !== "disabled") return user;
   return null;
 }
 
 export function createUser(data: Omit<User, "id" | "createdAt">): User {
   const users = getUsers();
-  const newUser: User = { ...data, id: `user-${Date.now()}`, createdAt: new Date().toISOString() };
+  const newUser: User = { 
+    ...data, 
+    id: `user-${Date.now()}`, 
+    createdAt: new Date().toISOString(),
+    status: "active"
+  };
   users.push(newUser);
   localStorage.setItem(KEY_USERS, JSON.stringify(users));
   return newUser;
+}
+
+export function updateUser(user: User): void {
+  const users = getUsers();
+  const idx = users.findIndex(u => u.id === user.id);
+  if (idx >= 0) {
+    users[idx] = user;
+    localStorage.setItem(KEY_USERS, JSON.stringify(users));
+  }
+}
+
+export function deleteUser(id: string): void {
+  const users = getUsers().filter(u => u.id !== id);
+  localStorage.setItem(KEY_USERS, JSON.stringify(users));
 }
 
 export function getStaffStats(businessId: string) {
@@ -521,16 +824,76 @@ export function getReviewsByBusiness(businessId: string): Review[] {
   return getReviews().filter(r => r.businessId === businessId);
 }
 
-export function addReview(data: Omit<Review, "id" | "createdAt" | "status" | "sentiment" | "keywords">): Review {
+export interface AIReplyStats {
+  repliesGenerated: number;
+  repliesApproved: number;
+  timeSaved: number;
+}
+
+export function getAIReplyStats(businessId: string): AIReplyStats {
+  if (typeof window === "undefined") return { repliesGenerated: 12, repliesApproved: 8, timeSaved: 20 };
+  const key = `rms_ai_reply_stats_${businessId}`;
+  const data = localStorage.getItem(key);
+  if (data) {
+    try {
+      return JSON.parse(data);
+    } catch { /* ignore */ }
+  }
+  const initial = { repliesGenerated: 12, repliesApproved: 8, timeSaved: 20 };
+  localStorage.setItem(key, JSON.stringify(initial));
+  return initial;
+}
+
+export function trackAIReplyGenerated(businessId: string) {
+  if (typeof window === "undefined") return;
+  const stats = getAIReplyStats(businessId);
+  stats.repliesGenerated += 1;
+  localStorage.setItem(`rms_ai_reply_stats_${businessId}`, JSON.stringify(stats));
+}
+
+export function trackAIReplyApproved(businessId: string) {
+  if (typeof window === "undefined") return;
+  const stats = getAIReplyStats(businessId);
+  stats.repliesApproved += 1;
+  stats.timeSaved = Number((stats.repliesApproved * 2.5).toFixed(1)); // 2.5 mins per reply
+  localStorage.setItem(`rms_ai_reply_stats_${businessId}`, JSON.stringify(stats));
+}
+
+export function addReview(data: Omit<Review, "id" | "createdAt" | "status" | "sentiment" | "keywords"> & { isPrivate?: boolean }): Review {
   const reviews = getReviews();
   const sentiment = analyzeSentiment(data.rating, data.text);
   const keywords = extractKeywords(data.text);
   const newReview: Review = {
-    ...data, id: `rev-${Date.now()}`, status: "pending",
-    sentiment, keywords, createdAt: new Date().toISOString(),
+    ...data,
+    id: `rev-${Date.now()}`,
+    status: "pending",
+    sentiment,
+    keywords,
+    createdAt: new Date().toISOString(),
+    isPrivate: data.isPrivate || false,
   };
   reviews.unshift(newReview);
   localStorage.setItem(KEY_REVIEWS, JSON.stringify(reviews));
+
+  // Escalation Workflow for private feedback gating (rating 1-3)
+  if (newReview.isPrivate) {
+    addAlert({
+      businessId: newReview.businessId,
+      locationId: newReview.locationId,
+      alertType: "private-complaint",
+      severity: "high",
+      message: `Private Complaint from ${newReview.customerName} (${newReview.rating}★): "${newReview.text}"`
+    });
+    addTask({
+      businessId: newReview.businessId,
+      locationId: newReview.locationId,
+      department: "management",
+      issueType: `Private Complaint Interception - ${newReview.customerName}`,
+      priority: "high",
+      status: "open"
+    });
+  }
+
   return newReview;
 }
 
@@ -542,6 +905,19 @@ export function replyToReview(reviewId: string, reply: string, repliedBy = "Owne
     reviews[idx].repliedAt = new Date().toISOString();
     reviews[idx].repliedBy = repliedBy;
     reviews[idx].status = "replied";
+    localStorage.setItem(KEY_REVIEWS, JSON.stringify(reviews));
+
+    // Milestone: aiReplyGenerated
+    updateMilestone(reviews[idx].businessId, "aiReplyGenerated", true);
+  }
+}
+
+export function saveDraftReply(reviewId: string, reply: string): void {
+  const reviews = getReviews();
+  const idx = reviews.findIndex(r => r.id === reviewId);
+  if (idx >= 0) {
+    reviews[idx].reply = reply;
+    reviews[idx].status = "pending"; // keeps it pending
     localStorage.setItem(KEY_REVIEWS, JSON.stringify(reviews));
   }
 }
@@ -561,7 +937,7 @@ export function deleteReview(reviewId: string): void {
 // ANALYTICS
 // ============================================================
 export function getBusinessAnalytics(businessId: string, locationId?: string) {
-  let reviews = getReviewsByBusiness(businessId);
+  let reviews = getReviewsByBusiness(businessId).filter(r => r.isPrivate !== true);
   if (locationId) reviews = reviews.filter(r => r.locationId === locationId);
 
   const total = reviews.length;
@@ -608,13 +984,43 @@ export function getBusinessAnalytics(businessId: string, locationId?: string) {
   const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
   const newThisWeek = reviews.filter(r => new Date(r.createdAt) >= weekAgo).length;
 
-  return { total, avgRating, responseRate, pending, replied, ratingDist, sentimentCounts, weeklyTrend, topKeywords, newThisWeek };
+  // Reviews this month (last 30 days)
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 86400000);
+  const reviewsThisMonth = reviews.filter(r => new Date(r.createdAt) >= thirtyDaysAgo).length;
+
+  // Month-over-month growth
+  const sixtyDaysAgo = new Date(now.getTime() - 60 * 86400000);
+  const prevCount = reviews.filter(r => {
+    const d = new Date(r.createdAt);
+    return d >= sixtyDaysAgo && d < thirtyDaysAgo;
+  }).length;
+  const currentCount = reviewsThisMonth;
+  let growthMoM = "+0%";
+  if (prevCount > 0) {
+    const pct = Math.round(((currentCount - prevCount) / prevCount) * 100);
+    growthMoM = pct >= 0 ? `+${pct}%` : `${pct}%`;
+  } else if (currentCount > 0) {
+    growthMoM = `+24%`; // fallback if previous is 0 but we have reviews (typical mock baseline)
+  }
+
+  // Additional tracking metrics
+  const campaigns = getCampaignsByBusiness(businessId);
+  const requestsSent = campaigns.reduce((sum, c) => sum + (c.sentCount || 0), 0);
+
+  const aiRepliesGenerated = reviews.filter(r => r.repliedBy === "AI" || r.repliedBy === "Owner" || r.status === "replied").length * 2 + 8;
+
+  const biz = getBusinessById(businessId);
+  const subscriptionPlan = biz?.subscriptionPlan || "starter";
+  const mrrMap: Record<string, number> = { starter: 29, growth: 79, agency: 199, enterprise: 999 };
+  const mrr = mrrMap[subscriptionPlan] || 29;
+
+  return { total, avgRating, responseRate, pending, replied, ratingDist, sentimentCounts, weeklyTrend, topKeywords, newThisWeek, requestsSent, aiRepliesGenerated, subscriptionPlan, mrr, reviewsThisMonth, growthMoM };
 }
 
 export function getPlatformAnalytics() {
   const businesses = getBusinesses();
   const reviews = getReviews();
-  const users = getUsers().filter(u => u.role === "merchant" || u.role === "demo");
+  const users = getUsers().filter(u => u.role === "owner");
 
   const totalMerchants = businesses.length;
   const totalReviews = reviews.length;
@@ -737,6 +1143,11 @@ export function addCampaign(data: Omit<ReviewRequestCampaign, "id" | "createdAt"
   };
   campaigns.unshift(newCampaign);
   localStorage.setItem(KEY_CAMPAIGNS, JSON.stringify(campaigns));
+
+  // Milestone: campaignCreated
+  updateMilestone(data.businessId, "campaignCreated", true);
+  updateMilestone(data.businessId, "reviewRequestSent", true);
+
   return newCampaign;
 }
 
@@ -748,3 +1159,196 @@ export function toggleCampaignActive(campaignId: string, isActive: boolean) {
     localStorage.setItem(KEY_CAMPAIGNS, JSON.stringify(campaigns));
   }
 }
+
+// ============================================================
+// SUPPORT TICKETS
+// ============================================================
+export function getTickets(): SupportTicket[] {
+  if (typeof window === "undefined") return SEED_TICKETS;
+  return JSON.parse(localStorage.getItem(KEY_TICKETS) || "[]");
+}
+
+export function saveTickets(tickets: SupportTicket[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(KEY_TICKETS, JSON.stringify(tickets));
+}
+
+export function addTicket(data: Omit<SupportTicket, "id" | "createdAt" | "status">): SupportTicket {
+  const tickets = getTickets();
+  const newTicket: SupportTicket = {
+    ...data,
+    id: `tick-${Date.now()}`,
+    status: "open",
+    createdAt: new Date().toISOString()
+  };
+  tickets.unshift(newTicket);
+  saveTickets(tickets);
+  addAuditLog("Support Ticket Created", data.businessId, undefined, { ticketId: newTicket.id, subject: newTicket.subject });
+  return newTicket;
+}
+
+export function updateTicket(ticket: SupportTicket) {
+  const tickets = getTickets();
+  const idx = tickets.findIndex(t => t.id === ticket.id);
+  if (idx >= 0) {
+    tickets[idx] = ticket;
+    saveTickets(tickets);
+  }
+}
+
+// ============================================================
+// FEATURE FLAGS
+// ============================================================
+export function getFeatureFlags(): FeatureFlag[] {
+  if (typeof window === "undefined") return SEED_FEATURE_FLAGS;
+  return JSON.parse(localStorage.getItem(KEY_FLAGS) || "[]");
+}
+
+export function saveFeatureFlags(flags: FeatureFlag[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(KEY_FLAGS, JSON.stringify(flags));
+}
+
+export function toggleFeatureFlag(key: string, enabled: boolean) {
+  const flags = getFeatureFlags();
+  const idx = flags.findIndex(f => f.key === key);
+  if (idx >= 0) {
+    flags[idx].enabled = enabled;
+    saveFeatureFlags(flags);
+    addAuditLog("Feature Flag Toggled", undefined, undefined, { flagKey: key, enabled });
+  }
+}
+
+export function updateFlagTargets(key: string, targetOrgs: string[], targetPlans: string[]) {
+  const flags = getFeatureFlags();
+  const idx = flags.findIndex(f => f.key === key);
+  if (idx >= 0) {
+    flags[idx].targetOrgs = targetOrgs;
+    flags[idx].targetPlans = targetPlans;
+    saveFeatureFlags(flags);
+  }
+}
+
+// ============================================================
+// ANNOUNCEMENTS
+// ============================================================
+export function getAnnouncements(): Announcement[] {
+  if (typeof window === "undefined") return SEED_ANNOUNCEMENTS;
+  return JSON.parse(localStorage.getItem(KEY_ANNOUNCEMENTS) || "[]");
+}
+
+export function saveAnnouncements(announcements: Announcement[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(KEY_ANNOUNCEMENTS, JSON.stringify(announcements));
+}
+
+export function createAnnouncement(data: Omit<Announcement, "id" | "createdAt">): Announcement {
+  const announcements = getAnnouncements();
+  const newAnn: Announcement = {
+    ...data,
+    id: `ann-${Date.now()}`,
+    createdAt: new Date().toISOString()
+  };
+  announcements.unshift(newAnn);
+  saveAnnouncements(announcements);
+  addAuditLog("Announcement Published", undefined, undefined, { title: newAnn.title, type: newAnn.type });
+  return newAnn;
+}
+
+// ============================================================
+// HEALTH MONITORING
+// ============================================================
+export function getPlatformHealth(): PlatformHealth {
+  if (typeof window === "undefined") return SEED_HEALTH;
+  return JSON.parse(localStorage.getItem(KEY_HEALTH) || JSON.stringify(SEED_HEALTH));
+}
+
+export function updatePlatformHealth(health: PlatformHealth) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(KEY_HEALTH, JSON.stringify(health));
+}
+
+// ============================================================
+// AUDIT LOGS
+// ============================================================
+export function getAuditLogs(): AuditLog[] {
+  if (typeof window === "undefined") return SEED_AUDIT_LOGS;
+  return JSON.parse(localStorage.getItem(KEY_AUDIT_LOGS) || "[]");
+}
+
+export function addAuditLog(action: string, businessId?: string, userId?: string, metadata?: any) {
+  if (typeof window === "undefined") return;
+  const logs = getAuditLogs();
+  
+  // Find current session user
+  let sessUser: any = null;
+  try {
+    const saved = sessionStorage.getItem("rms_current_user");
+    if (saved) sessUser = JSON.parse(saved);
+  } catch { /* ignore */ }
+
+  const newLog: AuditLog = {
+    id: `audit-${Date.now()}`,
+    userId: userId || sessUser?.id,
+    userName: sessUser?.name || "System",
+    businessId: businessId || sessUser?.businessId,
+    action,
+    ipAddress: "192.168.1.1",
+    userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "Node.js Environment",
+    metadata,
+    createdAt: new Date().toISOString()
+  };
+  logs.unshift(newLog);
+  localStorage.setItem(KEY_AUDIT_LOGS, JSON.stringify(logs));
+}
+
+// ============================================================
+// ONBOARDING & SIMULATION HELPERS
+// ============================================================
+export function updateMilestone(
+  businessId: string,
+  milestone: "googleConnected" | "campaignCreated" | "reviewRequestSent" | "aiReplyGenerated" | "subscriptionActivated",
+  value: boolean
+): void {
+  const businesses = getBusinesses();
+  const idx = businesses.findIndex(b => b.id === businessId);
+  if (idx >= 0) {
+    businesses[idx][milestone] = value;
+    localStorage.setItem(KEY_BUSINESSES, JSON.stringify(businesses));
+  }
+}
+
+export function simulateTrialDay(businessId: string, daysIntoTrial: number): void {
+  const businesses = getBusinesses();
+  const idx = businesses.findIndex(b => b.id === businessId);
+  if (idx >= 0) {
+    const trialStart = new Date(Date.now() - daysIntoTrial * 86400000);
+    businesses[idx].trialStartDate = trialStart.toISOString();
+    
+    // Auto flag subscription active if upgraded/simulating past trial limits
+    if (daysIntoTrial > 14 && businesses[idx].subscriptionPlan === "starter") {
+      // Keep it starter or keep locked
+    }
+    localStorage.setItem(KEY_BUSINESSES, JSON.stringify(businesses));
+    addAuditLog("Trial Day Simulated", businessId, undefined, { daysIntoTrial });
+  }
+}
+
+export function resetOnboardingState(businessId: string): void {
+  const businesses = getBusinesses();
+  const idx = businesses.findIndex(b => b.id === businessId);
+  if (idx >= 0) {
+    businesses[idx].isOnboarded = false;
+    businesses[idx].googleConnected = false;
+    businesses[idx].campaignCreated = false;
+    businesses[idx].reviewRequestSent = false;
+    businesses[idx].aiReplyGenerated = false;
+    businesses[idx].subscriptionActivated = false;
+    businesses[idx].trialStartDate = new Date().toISOString();
+    // Default mock description to empty to force setup flow edit
+    businesses[idx].description = "";
+    localStorage.setItem(KEY_BUSINESSES, JSON.stringify(businesses));
+    addAuditLog("Onboarding Reset", businessId);
+  }
+}
+

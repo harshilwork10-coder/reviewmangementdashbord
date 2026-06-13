@@ -14,7 +14,7 @@ export interface AIInsight {
 
 export interface AIReply {
     text: string;
-    tone: "professional" | "friendly" | "apologetic";
+    tone: "friendly" | "professional" | "empathetic" | "brand_voice";
 }
 
 // Generate AI insights based on reviews
@@ -116,41 +116,87 @@ export function generateInsights(reviews: Review[]): AIInsight[] {
 }
 
 // Generate AI reply suggestions for a review
-export function generateAIReply(review: Review): AIReply[] {
+export function generateAIReply(review: Review, brandVoice?: string): AIReply[] {
     const rating = review.rating;
-    const business = "our business";
+    const customer = review.customerName || "there";
+    const bvPrompt = brandVoice || "We are warm, customer-focused, and committed to excellence.";
+
+    let brandVoiceText = "";
+    if (rating >= 4) {
+        if (bvPrompt.toLowerCase().includes("stellar") || bvPrompt.toLowerCase().includes("culinary")) {
+            brandVoiceText = `Thank you so much for your wonderful review, ${customer}! 🍽️ We are absolutely thrilled you enjoyed your experience. We take immense pride in our farm-to-table culinary focus and fresh ingredients. We can't wait to welcome you back for another stellar meal! 🌟`;
+        } else {
+            brandVoiceText = `Thank you for the review, ${customer}! 🌟 We are committed to our brand values: "${bvPrompt}". We look forward to serving you again soon!`;
+        }
+    } else if (rating === 3) {
+        if (bvPrompt.toLowerCase().includes("stellar") || bvPrompt.toLowerCase().includes("culinary")) {
+            brandVoiceText = `Hi ${customer}, thank you for your honest feedback. 🍽️ We appreciate your insights regarding your visit. We are dedicated to our fresh, culinary standards and will continue improving our service. We hope to welcome you back soon to show you our progress! 🌟`;
+        } else {
+            brandVoiceText = `Thank you for sharing your thoughts, ${customer}. Based on our brand guidelines ("${bvPrompt}"), we appreciate your input and will address your concerns to deliver a better experience.`;
+        }
+    } else {
+        if (bvPrompt.toLowerCase().includes("stellar") || bvPrompt.toLowerCase().includes("culinary")) {
+            brandVoiceText = `We sincerely apologize for falling short during your visit, ${customer}. 🍽️ We take our culinary and service quality very seriously, and we are disappointed to hear your experience did not reflect our standard. Please contact us directly so we can resolve this. — The Bistro Team 🌟`;
+        } else {
+            brandVoiceText = `We apologize for the disappointing experience, ${customer}. Following our standards ("${bvPrompt}"), we take your feedback seriously and want to make things right. Please contact us to assist you.`;
+        }
+    }
 
     if (rating >= 4) {
         return [
             {
                 tone: "friendly",
-                text: `Thank you so much for your wonderful review! 🌟 We're absolutely delighted to hear you had such a great experience. Your kind words mean the world to our entire team. We can't wait to welcome you back soon! — The ${business} Team`,
+                text: `Thank you so much for your wonderful review! 🌟 We're absolutely delighted to hear you had such a great experience. Your kind words mean the world to our entire team. We can't wait to welcome you back soon!`,
             },
             {
                 tone: "professional",
                 text: `Thank you for taking the time to share your positive feedback. We're pleased to hear that your experience met your expectations. We look forward to serving you again in the future and appreciate your continued support.`,
             },
+            {
+                tone: "empathetic",
+                text: `Thank you for your warm review. Knowing that we were able to provide you with such a positive, comfortable experience truly warms our hearts. We look forward to welcome you back.`,
+            },
+            {
+                tone: "brand_voice",
+                text: brandVoiceText,
+            },
         ];
     } else if (rating === 3) {
         return [
             {
-                tone: "professional",
-                text: `Thank you for your honest feedback. We appreciate you sharing both what went well and where we can improve. Your insights help us deliver a better experience for everyone. We hope to have the opportunity to serve you again and show you our full potential.`,
+                tone: "friendly",
+                text: `Thanks for the honest review! We're glad some aspects of your visit were enjoyable, and we definitely hear you on the areas that could be better. We're always working to improve and hope you'll give us another chance soon! 😊`,
             },
             {
-                tone: "friendly",
-                text: `Thanks for the honest review! We're glad some aspects of your visit were enjoyable, and we definitely hear you on the areas that could be better. We're always working to improve and hope you'll give us another chance. You won't regret it! 😊`,
+                tone: "professional",
+                text: `Thank you for your honest feedback. We appreciate you sharing both what went well and where we can improve. Your insights help us deliver a better experience for everyone. We hope to serve you again in the future.`,
+            },
+            {
+                tone: "empathetic",
+                text: `Thank you for sharing your experience. We understand that your visit was just okay, and we want to apologize for not exceeding your expectations. We appreciate your patience and will use this feedback to improve.`,
+            },
+            {
+                tone: "brand_voice",
+                text: brandVoiceText,
             },
         ];
     } else {
         return [
             {
-                tone: "apologetic",
-                text: `We sincerely apologize for falling short of your expectations. This is not the experience we strive to deliver, and we take your feedback very seriously. We'd love the opportunity to make this right — please reach out to us directly so we can resolve this for you. Thank you for bringing this to our attention.`,
+                tone: "friendly",
+                text: `Oh no, we are so sorry to hear you had a disappointing visit! 😢 We definitely want to make this up to you. Please reach out to us directly so we can chat and get this sorted out. We hope to see you again soon!`,
             },
             {
                 tone: "professional",
-                text: `Thank you for your candid feedback. We're truly sorry to hear your experience did not meet our usual standards. We have taken note of your concerns and will be addressing them with our team immediately. We appreciate your patience and hope to restore your confidence in us.`,
+                text: `Thank you for your candid feedback. We're truly sorry to hear your experience did not meet our usual standards. We have taken note of your concerns and will be addressing them with our team immediately. We appreciate your patience.`,
+            },
+            {
+                tone: "empathetic",
+                text: `We are deeply sorry to hear about your experience. We completely understand your frustration and feel terrible for falling short. We want to apologize sincerely and would appreciate the chance to connect with you directly to make this right.`,
+            },
+            {
+                tone: "brand_voice",
+                text: brandVoiceText,
             },
         ];
     }

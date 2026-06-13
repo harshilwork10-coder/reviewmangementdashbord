@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
 
 export const metadata: Metadata = {
-  title: "ReviewHub — AI-Powered Review Management",
-  description: "Automate review collection, analyze customer feedback with AI, and grow your business reputation.",
+  title: "ReviewManagement — AI-Powered Review & Reputation Platform",
+  description: "Help businesses turn customer feedback into revenue, trust, and growth. Automate review collection, analyze feedback with AI, and manage reputation across platforms.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
