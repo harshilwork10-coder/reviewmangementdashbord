@@ -14,28 +14,28 @@ export default function PricingPage() {
     const plans = [
         {
             name: "Starter",
-            description: "Perfect for small local businesses getting started.",
-            price: "$29",
-            features: ["1 Location", "Basic Monitoring", "Review Requests", "Email Support"],
+            description: "For small businesses.",
+            price: "$49",
+            features: ["1 Business Location", "250 Review Requests/Month", "Email Campaigns", "Basic Dashboard", "Standard Support"],
         },
         {
             name: "Growth",
-            description: "Ideal for growing businesses with multiple locations.",
-            price: "$79",
-            features: ["Multiple Locations", "AI Replies", "Advanced Reporting", "Priority Support"],
+            description: "For growing businesses.",
+            price: "$99",
+            features: ["3 Business Locations", "1,000 Review Requests/Month", "Email & SMS Campaigns", "Advanced Reporting", "Priority Support"],
             popular: true,
         },
         {
             name: "Agency",
-            description: "Tailored for marketing agencies managing multiple clients.",
-            price: "$199",
-            features: ["Multi-Client Management", "White-Label Reporting", "Custom branding", "API Access"],
+            description: "For agencies managing clients.",
+            price: "$299",
+            features: ["Up to 10 Client Accounts", "Agency Dashboard", "Multi-Client Reporting", "Client Management Tools", "Priority Agency Support"],
         },
         {
             name: "Enterprise",
-            description: "For large organizations needing custom solutions.",
+            description: "Custom requirements.",
             price: "Custom",
-            features: ["Custom Integrations", "Dedicated Support", "Advanced Permissions", "SLA Support"],
+            features: ["Unlimited Locations", "Custom Integrations", "Dedicated Success Manager", "Custom Reporting", "Enterprise SLA"],
         },
     ];
 

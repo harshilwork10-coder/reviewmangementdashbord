@@ -3,7 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { LayoutDashboard, Building2, Users, Star, Settings, LogOut, ChevronRight, Shield, LifeBuoy, Activity, TrendingUp, Briefcase, Server, Calendar, Target, Layers, Database, Cpu, Monitor, Lock, Send, BarChart, CreditCard, Rocket } from "lucide-react";
+import { LayoutDashboard, Building2, Users, Star, Settings, LogOut, ChevronRight, Shield, LifeBuoy, Activity, TrendingUp, Briefcase, Server, Calendar, Target, Layers, Database, Cpu, Monitor, Lock, Send, BarChart, CreditCard, Rocket, BookOpen, Handshake } from "lucide-react";
 
 const NAV = [
     { href: "/admin", icon: LayoutDashboard, label: "Overview" },
@@ -18,10 +18,12 @@ const NAV = [
     { href: "/admin/billing", icon: CreditCard, label: "Billing Console" },
     { href: "/admin/analytics", icon: TrendingUp, label: "Platform Analytics" },
     { href: "/admin/crm", icon: Briefcase, label: "CRM & Success" },
+    { href: "/admin/training", icon: BookOpen, label: "Sales Training" },
     { href: "/admin/product", icon: Calendar, label: "Roadmap & Sprints" },
     { href: "/admin/qa", icon: Shield, label: "QA & Releases" },
     { href: "/admin/devops", icon: Server, label: "DevOps & Hosting" },
     { href: "/admin/launch", icon: Rocket, label: "Launch & GTM" },
+    { href: "/admin/partners", icon: Handshake, label: "Partner Program" },
     { href: "/admin/merchants", icon: Building2, label: "Merchants" },
     { href: "/admin/customers", icon: Users, label: "Customers" },
     { href: "/admin/reviews", icon: Star, label: "All Reviews" },

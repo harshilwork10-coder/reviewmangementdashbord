@@ -59,16 +59,17 @@ export function Footer() {
                     <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12">
                         <div>
                             <h4 className="font-bold text-white mb-6 tracking-wide uppercase text-xs">Product</h4>
-                            <ul className="space-y-4">
+                            <ul className="space-y-4 text-sm">
                                 {[
                                     { label: "Features", href: "/features" },
                                     { label: "Pricing", href: "/pricing" },
+                                    { label: "Agency Solutions", href: "/agency-solutions" },
                                     { label: "Integrations", href: "#" },
                                     { label: "API Docs", href: "#" },
                                     { label: "Changelog", href: "#" },
                                 ].map((item) => (
                                     <li key={item.label}>
-                                        <Link href={item.href} className="text-sm text-slate-500 hover:text-white transition-colors">{item.label}</Link>
+                                        <Link href={item.href} className="text-slate-500 hover:text-white transition-colors">{item.label}</Link>
                                     </li>
                                 ))}
                             </ul>
@@ -102,6 +103,8 @@ export function Footer() {
                             <ul className="space-y-4 text-sm">
                                 {[
                                     { label: "About Us", href: "/about" },
+                                    { label: "Executive Summary", href: "/executive-summary" },
+                                    { label: "Investor Relations", href: "/investors" },
                                     { label: "Contact", href: "/contact" },
                                     { label: "Privacy Policy", href: "/privacy-policy" },
                                     { label: "Terms & Conditions", href: "/terms-and-conditions" },

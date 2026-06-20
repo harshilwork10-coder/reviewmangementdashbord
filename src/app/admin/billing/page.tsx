@@ -43,8 +43,8 @@ interface ToastMessage {
 
 // ── Initial Subscription Plans Data ───────────────────────────────────────
 const subscriptionPlans: SubscriptionPlan[] = [
-    { id: "starter", name: "Starter Plan", price: 29, locations: "1 Location", invites: 500, sms: 50, color: "text-violet-400 border-violet-500/30 bg-violet-500/10" },
-    { id: "growth", name: "Growth Plan", price: 79, locations: "3 Locations", invites: 2500, sms: 250, color: "text-cyan-400 border-cyan-500/30 bg-cyan-500/10" },
+    { id: "starter", name: "Starter Plan", price: 49, locations: "1 Location", invites: 500, sms: 50, color: "text-violet-400 border-violet-500/30 bg-violet-500/10" },
+    { id: "growth", name: "Growth Plan", price: 99, locations: "3 Locations", invites: 2500, sms: 250, color: "text-cyan-400 border-cyan-500/30 bg-cyan-500/10" },
     { id: "agency", name: "Agency Plan", price: 299, locations: "Unlimited Locations", invites: 15000, sms: 1500, color: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" },
     { id: "enterprise", name: "Enterprise Plan", price: 999, locations: "Negotiated limits", invites: 100000, sms: 10000, color: "text-pink-400 border-pink-500/30 bg-pink-500/10" },
 ];
@@ -144,13 +144,20 @@ export default function SuperAdminBillingPage() {
     const [webhookLogs, setWebhookLogs] = useState<string[]>([]);
     const [webhookDispatching, setWebhookDispatching] = useState(false);
 
-    // Deliverables gates state
+    // Financial Model States
+    const [financeScenario, setFinanceScenario] = useState<"expected" | "best" | "worst">("expected");
+    const [arpaAssumed, setArpaAssumed] = useState<number>(99);
+    const [fixedCostsAssumed, setFixedCostsAssumed] = useState<number>(3500); // cloud hosting + marketing + sales reps
+    const [deliveryCostsAssumed, setDeliveryCostsAssumed] = useState<number>(10); // SMS & Email variable costs per client
+    const [supportCostsAssumed, setSupportCostsAssumed] = useState<number>(5); // customer support variable costs per client
+
+    // Deliverables gates state (Part 11)
     const [deliverables, setDeliverables] = useState([
-        { id: "bp1", label: "Stripe architecture approved", checked: true },
-        { id: "bp2", label: "Subscription lifecycle documented", checked: true },
-        { id: "bp3", label: "Usage tracking model approved", checked: true },
-        { id: "bp4", label: "Revenue reporting defined", checked: true },
-        { id: "bp5", label: "Billing implementation ready", checked: false },
+        { id: "bp1", label: "Revenue projections approved", checked: true },
+        { id: "bp2", label: "Growth assumptions approved", checked: true },
+        { id: "bp3", label: "Break-even model defined", checked: true },
+        { id: "bp4", label: "KPI framework established", checked: true },
+        { id: "bp5", label: "Financial roadmap ready", checked: false },
     ]);
 
     const doneDels = deliverables.filter(d => d.checked).length;
@@ -241,7 +248,7 @@ export default function SuperAdminBillingPage() {
         { id: "webhooks", label: "Webhook Simulator", icon: RefreshCw },
         { id: "quotas", label: "Quota Monitor", icon: Database },
         { id: "revops", label: "Revenue Ops", icon: BarChart2 },
-        { id: "deliverables", label: "Part 9 Gates", icon: CheckCircle },
+        { id: "deliverables", label: "Part 11 Gates", icon: CheckCircle },
     ] as const;
 
     return (
@@ -364,8 +371,8 @@ export default function SuperAdminBillingPage() {
                                         onChange={e => setCalcCurrent(e.target.value)}
                                         className="w-full bg-slate-900 border border-white/10 rounded-lg text-xs text-white p-2 focus:outline-none"
                                     >
-                                        <option value="starter">Starter Plan ($29/mo)</option>
-                                        <option value="growth">Growth Plan ($79/mo)</option>
+                                        <option value="starter">Starter Plan ($49/mo)</option>
+                                        <option value="growth">Growth Plan ($99/mo)</option>
                                         <option value="agency">Agency Plan ($299/mo)</option>
                                     </select>
                                 </div>
@@ -376,8 +383,8 @@ export default function SuperAdminBillingPage() {
                                         onChange={e => setCalcTarget(e.target.value)}
                                         className="w-full bg-slate-900 border border-white/10 rounded-lg text-xs text-white p-2 focus:outline-none"
                                     >
-                                        <option value="starter">Starter Plan ($29/mo)</option>
-                                        <option value="growth">Growth Plan ($79/mo)</option>
+                                        <option value="starter">Starter Plan ($49/mo)</option>
+                                        <option value="growth">Growth Plan ($99/mo)</option>
                                         <option value="agency">Agency Plan ($299/mo)</option>
                                         <option value="enterprise">Enterprise Plan ($999/mo)</option>
                                     </select>
@@ -596,88 +603,300 @@ export default function SuperAdminBillingPage() {
             {/* ── Revenue Ops Tab ── */}
             {activeTab === "revops" && (
                 <div className="space-y-6">
-                    {/* Revenue KPIs */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {[
-                            { label: "Monthly Recurring Revenue (MRR)", val: "$18,450 / mo", desc: "Outbound Stripe active billing", color: "text-violet-400" },
-                            { label: "Annual Run Rate (ARR)", val: "$221,400 / yr", desc: "Projected annual sum", color: "text-cyan-400" },
-                            { label: "Customer Lifetime Value (LTV)", val: "$1,240 Avg", desc: "Cumulative organization payment", color: "text-emerald-400" },
-                            { label: "Churn rate (30 days)", val: "2.4%", desc: "1.8% industry average benchmark", color: "text-red-400" },
-                        ].map((kpi, idx) => (
-                            <div key={idx} className="glass-card rounded-2xl p-5 border border-border/60">
-                                <span className="text-[9px] text-slate-500 block uppercase font-bold tracking-wide">{kpi.label}</span>
-                                <div className={`text-lg font-bold font-mono mt-1 ${kpi.color}`}>{kpi.val}</div>
-                                <span className="text-[9px] text-slate-400 block mt-1">{kpi.desc}</span>
+                    {/* Scenario Selector & Assumptions Sliders */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Financial Assumptions */}
+                        <div className="glass-card rounded-2xl p-6 border border-border/60 space-y-4">
+                            <div>
+                                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">
+                                    Financial Assumptions
+                                </h3>
+                                <p className="text-[10px] text-slate-500 leading-normal">
+                                    Adjust values to simulate growth variables and calculate custom breakeven metrics.
+                                </p>
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Chart diagrams */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="glass-card rounded-2xl p-6 border border-border/60">
-                            <h4 className="text-xs font-bold text-white mb-4 flex items-center gap-2">
-                                <BarChart2 className="w-3.5 h-3.5 text-violet-400" /> MRR Expansion growth (6 months)
-                            </h4>
-                            <div className="flex items-end justify-between h-40 pt-6 px-2 bg-slate-950 rounded-xl p-4 border border-white/5">
-                                {[
-                                    { label: "Jan", val: 12000 },
-                                    { label: "Feb", val: 13500 },
-                                    { label: "Mar", val: 14200 },
-                                    { label: "Apr", val: 16100 },
-                                    { label: "May", val: 17300 },
-                                    { label: "Jun", val: 18450 }
-                                ].map((point, idx) => {
-                                    const scale = (point.val / 20000) * 100;
-                                    return (
-                                        <div key={idx} className="flex flex-col items-center gap-1.5 flex-1 group cursor-pointer">
-                                            <div className="relative w-full flex items-end justify-center h-full">
-                                                <div className="absolute bottom-full mb-1.5 bg-red-600 text-white font-mono text-[8px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                                                    ${point.val.toLocaleString()}
-                                                </div>
-                                                <div style={{ height: `${scale}%` }}
-                                                    className="w-3/5 rounded-t bg-gradient-to-t from-red-600 to-orange-500 transition-all duration-500 group-hover:brightness-125" />
-                                            </div>
-                                            <span className="text-[9px] text-slate-600 group-hover:text-slate-300 transition-colors font-mono">{point.label}</span>
-                                        </div>
-                                    );
-                                })}
+                            <div className="space-y-3.5 text-xs">
+                                <div>
+                                    <div className="flex justify-between text-slate-400 font-semibold mb-1">
+                                        <span>Average Revenue Per Account (ARPA)</span>
+                                        <span className="text-indigo-400 font-bold font-mono">${arpaAssumed}/mo</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="49"
+                                        max="199"
+                                        step="10"
+                                        value={arpaAssumed}
+                                        onChange={e => setArpaAssumed(Number(e.target.value))}
+                                        className="w-full h-1 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                                    />
+                                </div>
+
+                                <div>
+                                    <div className="flex justify-between text-slate-400 font-semibold mb-1">
+                                        <span>Fixed Monthly Operating Costs</span>
+                                        <span className="text-indigo-400 font-bold font-mono">${fixedCostsAssumed}/mo</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="1000"
+                                        max="10000"
+                                        step="500"
+                                        value={fixedCostsAssumed}
+                                        onChange={e => setFixedCostsAssumed(Number(e.target.value))}
+                                        className="w-full h-1 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                                    />
+                                    <span className="text-[9px] text-slate-500 font-mono block mt-0.5">(hosting + support + marketing)</span>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Variable Delivery/client</span>
+                                        <input
+                                            type="number"
+                                            value={deliveryCostsAssumed}
+                                            onChange={e => setDeliveryCostsAssumed(Math.max(0, Number(e.target.value)))}
+                                            className="w-full bg-slate-900 border border-white/10 rounded-lg p-1.5 text-xs text-white focus:outline-none font-mono font-bold"
+                                        />
+                                    </div>
+                                    <div>
+                                        <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider block mb-1">Variable Support/client</span>
+                                        <input
+                                            type="number"
+                                            value={supportCostsAssumed}
+                                            onChange={e => setSupportCostsAssumed(Math.max(0, Number(e.target.value)))}
+                                            className="w-full bg-slate-900 border border-white/10 rounded-lg p-1.5 text-xs text-white focus:outline-none font-mono font-bold"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="glass-card rounded-2xl p-6 border border-border/60">
-                            <h4 className="text-xs font-bold text-white mb-4 flex items-center gap-2">
-                                <CreditCard className="w-3.5 h-3.5 text-cyan-400" /> Plan subscription distribution
-                            </h4>
-                            <div className="space-y-3">
-                                {[
-                                    { name: "Starter Plan ($29)", percentage: 45, count: 180 },
-                                    { name: "Growth Plan ($79)", percentage: 40, count: 160 },
-                                    { name: "Agency Plan ($299)", percentage: 12, count: 48 },
-                                    { name: "Enterprise Plan (Custom)", percentage: 3, count: 12 },
-                                ].map((plan, i) => (
-                                    <div key={i} className="flex justify-between items-center p-3 bg-slate-950/60 border border-white/5 rounded-xl text-[10px]">
-                                        <div>
-                                            <span className="font-bold text-slate-200 block">{plan.name}</span>
-                                            <span className="text-[9px] text-slate-500">{plan.count} organizations active</span>
+                        {/* Interactive Break-Even Calculator */}
+                        <div className="glass-card rounded-2xl p-6 border border-border/60 flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">
+                                    Break-Even Analysis
+                                </h3>
+                                <p className="text-[10px] text-slate-500 leading-normal mb-4">
+                                    Breakeven target computed against fixed operating and variable service expenses.
+                                </p>
+
+                                {(() => {
+                                    const contributionMargin = arpaAssumed - deliveryCostsAssumed - supportCostsAssumed;
+                                    const breakEvenCustomers = contributionMargin > 0 ? Math.ceil(fixedCostsAssumed / contributionMargin) : 99999;
+                                    const grossMargin = arpaAssumed > 0 ? Math.round((contributionMargin / arpaAssumed) * 100) : 0;
+                                    return (
+                                        <div className="space-y-4">
+                                            <div className="p-3.5 bg-slate-950/80 rounded-xl border border-white/5 grid grid-cols-2 gap-4 text-center">
+                                                <div>
+                                                    <span className="text-[9px] text-slate-500 uppercase font-bold block">Breakeven Target</span>
+                                                    <span className="text-base font-black text-indigo-400 font-mono">{breakEvenCustomers} clients</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-[9px] text-slate-500 uppercase font-bold block">Gross Margin</span>
+                                                    <span className={`text-base font-black font-mono ${grossMargin >= 70 ? "text-emerald-400" : "text-rose-400"}`}>{grossMargin}%</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="text-[11px] text-slate-400 space-y-1.5 leading-relaxed font-mono">
+                                                <div className="flex justify-between">
+                                                    <span>Contribution Margin/User:</span>
+                                                    <span className="text-slate-300 font-bold">${contributionMargin}/mo</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span>Breakeven MRR needed:</span>
+                                                    <span className="text-slate-300 font-bold">${(breakEvenCustomers * arpaAssumed).toLocaleString()}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <span className="text-cyan-400 font-bold font-mono">{plan.percentage}% share</span>
-                                    </div>
-                                ))}
+                                    );
+                                })()}
+                            </div>
+
+                            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-[10px] text-emerald-300 leading-normal flex items-start gap-2 mt-4">
+                                <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                                <span>Breakeven target achieved within Year 1 under Expected and Best Case scenarios.</span>
+                            </div>
+                        </div>
+
+                        {/* Scenario Picker & Targets */}
+                        <div className="glass-card rounded-2xl p-6 border border-border/60 flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">
+                                    Revenue Scenario Simulator
+                                </h3>
+                                <p className="text-[10px] text-slate-500 leading-normal mb-4">
+                                    Toggle GTM scenarios to evaluate model projections.
+                                </p>
+
+                                <div className="grid grid-cols-3 gap-1.5 bg-slate-950 p-1 rounded-xl border border-white/5">
+                                    {(["worst", "expected", "best"] as const).map(sc => (
+                                        <button
+                                            key={sc}
+                                            onClick={() => setFinanceScenario(sc)}
+                                            className={`py-2 rounded-lg text-[10px] font-bold uppercase transition-all border-none bg-transparent cursor-pointer ${
+                                                financeScenario === sc
+                                                    ? "bg-red-600 text-white shadow-md"
+                                                    : "text-slate-500 hover:text-slate-300"
+                                            }`}
+                                        >
+                                            {sc === "worst" ? "Worst" : sc === "expected" ? "Expected" : "Best Case"}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="pt-4 border-t border-slate-900 mt-4 space-y-2 text-xs">
+                                <div className="flex justify-between font-mono">
+                                    <span className="text-slate-500">Year 1 Target MRR:</span>
+                                    <span className="text-white font-bold">
+                                        {financeScenario === "best" ? "$14,850+" : financeScenario === "expected" ? "$9,900+" : "$4,950+"}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between font-mono">
+                                    <span className="text-slate-500">Year 2 Target MRR:</span>
+                                    <span className="text-white font-bold">
+                                        {financeScenario === "best" ? "$34,650+" : financeScenario === "expected" ? "$24,750+" : "$11,880+"}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between font-mono">
+                                    <span className="text-slate-500">Year 3 Target MRR:</span>
+                                    <span className="text-white font-bold">
+                                        {financeScenario === "best" ? "$74,250+" : financeScenario === "expected" ? "$49,500+" : "$24,750+"}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Projections Table & Channels */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Projections Grid */}
+                        <div className="lg:col-span-2 glass-card rounded-2xl p-6 border border-border/60">
+                            <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                <BarChart2 className="w-4.5 h-4.5 text-violet-400" />
+                                Interactive Revenue Forecast Projections
+                            </h3>
+                            <p className="text-xs text-slate-400 mb-6">
+                                Projections generated dynamically based on selected assumptions and scenarios.
+                             </p>
+
+                            <div className="overflow-x-auto font-mono text-xs">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="border-b border-white/5 text-slate-500 font-semibold">
+                                            <th className="pb-2">Timeline Phase</th>
+                                            <th className="pb-2">Expected Customer Count</th>
+                                            <th className="pb-2 text-right">Projected MRR</th>
+                                            <th className="pb-2 text-right">Projected ARR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5 text-slate-300">
+                                        <tr>
+                                            <td className="py-3 font-semibold text-slate-200">Year 1 - Month 3</td>
+                                            <td className="py-3">{financeScenario === "best" ? 15 : financeScenario === "expected" ? 10 : 5} customers</td>
+                                            <td className="py-3 text-right text-emerald-400 font-bold">
+                                                ${((financeScenario === "best" ? 15 : financeScenario === "expected" ? 10 : 5) * arpaAssumed).toLocaleString()}
+                                            </td>
+                                            <td className="py-3 text-right text-slate-400">
+                                                ${((financeScenario === "best" ? 15 : financeScenario === "expected" ? 10 : 5) * arpaAssumed * 12).toLocaleString()}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-3 font-semibold text-slate-200">Year 1 - Month 6</td>
+                                            <td className="py-3">{financeScenario === "best" ? 45 : financeScenario === "expected" ? 30 : 15} customers</td>
+                                            <td className="py-3 text-right text-emerald-400 font-bold">
+                                                ${((financeScenario === "best" ? 45 : financeScenario === "expected" ? 30 : 15) * arpaAssumed).toLocaleString()}
+                                            </td>
+                                            <td className="py-3 text-right text-slate-400">
+                                                ${((financeScenario === "best" ? 45 : financeScenario === "expected" ? 30 : 15) * arpaAssumed * 12).toLocaleString()}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-3 font-semibold text-slate-200">Year 1 - Month 9</td>
+                                            <td className="py-3">{financeScenario === "best" ? 90 : financeScenario === "expected" ? 60 : 30} customers</td>
+                                            <td className="py-3 text-right text-emerald-400 font-bold">
+                                                ${((financeScenario === "best" ? 90 : financeScenario === "expected" ? 60 : 30) * arpaAssumed).toLocaleString()}
+                                            </td>
+                                            <td className="py-3 text-right text-slate-400">
+                                                ${((financeScenario === "best" ? 90 : financeScenario === "expected" ? 60 : 30) * arpaAssumed * 12).toLocaleString()}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-3 font-semibold text-slate-200">Year 1 - Month 12</td>
+                                            <td className="py-3">{financeScenario === "best" ? 150 : financeScenario === "expected" ? 100 : 50} customers</td>
+                                            <td className="py-3 text-right text-emerald-400 font-bold">
+                                                ${((financeScenario === "best" ? 150 : financeScenario === "expected" ? 100 : 50) * arpaAssumed).toLocaleString()}
+                                            </td>
+                                            <td className="py-3 text-right text-slate-400">
+                                                ${((financeScenario === "best" ? 150 : financeScenario === "expected" ? 100 : 50) * arpaAssumed * 12).toLocaleString()}
+                                            </td>
+                                        </tr>
+                                        <tr className="bg-white/1 font-bold">
+                                            <td className="py-3 text-slate-200 font-semibold">Year 2 - Year End</td>
+                                            <td className="py-3">{financeScenario === "best" ? 350 : financeScenario === "expected" ? 250 : 120} customers</td>
+                                            <td className="py-3 text-right text-emerald-400 font-bold">
+                                                ${((financeScenario === "best" ? 350 : financeScenario === "expected" ? 250 : 120) * arpaAssumed).toLocaleString()}
+                                            </td>
+                                            <td className="py-3 text-right text-indigo-400">
+                                                ${((financeScenario === "best" ? 350 : financeScenario === "expected" ? 250 : 120) * arpaAssumed * 12).toLocaleString()}
+                                            </td>
+                                        </tr>
+                                        <tr className="bg-white/2 font-bold">
+                                            <td className="py-3 text-slate-200 font-semibold">Year 3 - Year End</td>
+                                            <td className="py-3">{financeScenario === "best" ? 750 : financeScenario === "expected" ? 500 : 250} customers</td>
+                                            <td className="py-3 text-right text-emerald-400 font-bold">
+                                                ${((financeScenario === "best" ? 750 : financeScenario === "expected" ? 500 : 250) * arpaAssumed).toLocaleString()}
+                                            </td>
+                                            <td className="py-3 text-right text-indigo-400">
+                                                ${((financeScenario === "best" ? 750 : financeScenario === "expected" ? 500 : 250) * arpaAssumed * 12).toLocaleString()}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Customer Acquisition Assumptions */}
+                        <div className="glass-card rounded-2xl p-6 border border-border/60 flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                                    <Activity className="w-4.5 h-4.5 text-indigo-400" />
+                                    Acquisition Cost Assumptions
+                                </h3>
+                                <div className="space-y-3">
+                                    {[
+                                        { ch: "Openrize Bundle Option", detail: "Warm lead conversions with $0 additional CAC.", efficiency: "Very High" },
+                                        { ch: "LinkedIn Social Outreach", desc: "Founder-led, low initial cash expenditure.", efficiency: "High" },
+                                        { ch: "Customer Referral Engine", desc: "Dual advocacy rewards structure reduces CAC.", efficiency: "High" },
+                                        { ch: "Agency reseller program", desc: "Bulk licensing slots shifts support / CAC burden.", efficiency: "High" }
+                                    ].map((item, idx) => (
+                                        <div key={idx} className="p-3 bg-slate-950/60 border border-white/5 rounded-xl text-xs space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-bold text-slate-200">{item.ch}</span>
+                                                <span className="text-[9px] font-bold text-emerald-400 font-mono">{item.efficiency}</span>
+                                            </div>
+                                            <p className="text-[10px] text-slate-500 leading-relaxed">{item.desc || item.detail}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* ── Part 9 Gates Checklist Tab ── */}
+            {/* ── Part 11 Gates Checklist Tab ── */}
             {activeTab === "deliverables" && (
                 <div className="max-w-2xl mx-auto">
                     <div className="glass-card rounded-2xl p-8 border border-border/60">
                         <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
-                            <CheckCircle className="w-4.5 h-4.5 text-emerald-400" /> Part 9 Deliverables Gates
+                            <CheckCircle className="w-4.5 h-4.5 text-emerald-400" /> Part 11 Financial Gates
                         </h3>
                         <p className="text-xs text-slate-400 leading-relaxed mb-8">
-                            Toggle individual Billing & Subscription checkpoints to mark this architecture domain as validated.
+                            Toggle individual GTM financial checkpoints to sign off the strategic revenue roadmap.
                         </p>
 
                         <div className="space-y-3 mb-8">
@@ -690,7 +909,7 @@ export default function SuperAdminBillingPage() {
                                         );
                                         addToast(d.checked ? "warning" : "success", `Updated Gate: ${d.label}`);
                                     }}
-                                    className={`w-full p-4 rounded-xl border text-left text-xs flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                                    className={`w-full p-4 rounded-xl border text-left text-xs flex items-center justify-between gap-3 cursor-pointer transition-all border-none bg-transparent ${
                                         d.checked
                                             ? "bg-emerald-500/10 border-emerald-500/30 text-white"
                                             : "bg-slate-900 border-white/5 text-slate-500 hover:border-white/10"
@@ -710,18 +929,18 @@ export default function SuperAdminBillingPage() {
 
                         <div className="space-y-2">
                             <div className="flex justify-between text-xs">
-                                <span className="text-slate-400">Part 9 Completion progress</span>
+                                <span className="text-slate-400">Part 11 Completion progress</span>
                                 <span className="text-emerald-400 font-bold">{doneDels}/5</span>
                             </div>
                             <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
                                 <div
                                     className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
                                     style={{ width: `${(doneDels / deliverables.length) * 100}%` }}
-                                />
+                                ></div>
                             </div>
                             {doneDels === deliverables.length && (
                                 <div className="pt-3 flex items-center gap-2 text-emerald-400 text-xs font-bold animate-pulse">
-                                    <CheckCircle className="w-4.5 h-4.5" /> Part 9 Complete — Billing & Subscription Ready for Integration!
+                                    <CheckCircle className="w-4.5 h-4.5" /> Part 11 Complete — GTM Financial Model and Roadmap approved!
                                 </div>
                             )}
                         </div>

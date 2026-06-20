@@ -5,13 +5,14 @@ import Link from "next/link";
 import {
     LayoutDashboard, Star, BarChart3, Lightbulb,
     Settings, LogOut, Zap, ChevronRight, Globe,
-    Bell, CheckSquare, Send, Trophy, Crosshair, Blocks
+    Bell, CheckSquare, Send, Trophy, Crosshair, Blocks, BookOpen
 } from "lucide-react";
 import { getBusinessByOwner, getBusinessById, Business } from "@/lib/store";
 import { useEffect, useState } from "react";
 
 const NAV = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
+    { href: "/dashboard/onboarding", icon: BookOpen, label: "Onboarding Kit" },
     { href: "/dashboard/reviews", icon: Star, label: "Inbox" },
     { href: "/dashboard/tasks", icon: CheckSquare, label: "Action Tracker" },
     { href: "/dashboard/alerts", icon: Bell, label: "Alerts" },

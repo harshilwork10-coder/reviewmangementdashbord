@@ -37,64 +37,60 @@ export default function HomePage() {
   const pricingPlans = [
     {
       name: "Starter",
-      description: "Perfect for single-location local businesses looking to automate reviews.",
-      monthlyPrice: 29,
-      yearlyPrice: 23,
+      description: "For small businesses.",
+      monthlyPrice: 49,
+      yearlyPrice: 40,
       features: [
-        "1 Location",
-        "SMS & Email Review Requests",
-        "Basic AI Reply Templates",
-        "Google & Facebook Integration",
-        "Analytics Dashboard",
-        "Email Support"
+        "1 Business Location",
+        "250 Review Requests/Month",
+        "Email Campaigns",
+        "Basic Dashboard",
+        "Standard Support"
       ],
       cta: "Start Free Trial",
       popular: false
     },
     {
       name: "Growth",
-      description: "Designed for expanding businesses needing full automated operations.",
-      monthlyPrice: 79,
-      yearlyPrice: 63,
+      description: "For growing businesses.",
+      monthlyPrice: 99,
+      yearlyPrice: 82,
       features: [
-        "Up to 5 Locations",
-        "Advanced AI Reply Assistant (Tone Selection)",
-        "Automated Scheduling Campaigns",
-        "Unified Reviews Inbox",
-        "Priority SMS Dispatch Limits",
-        "Priority Email & Chat Support"
+        "3 Business Locations",
+        "1,000 Review Requests/Month",
+        "Email & SMS Campaigns",
+        "Advanced Reporting",
+        "Priority Support"
       ],
       cta: "Start Free Trial",
       popular: true
     },
     {
       name: "Agency",
-      description: "Scale client management with full whitelabel branding capabilities.",
-      monthlyPrice: 199,
-      yearlyPrice: 159,
+      description: "For agencies managing clients.",
+      monthlyPrice: 299,
+      yearlyPrice: 249,
       features: [
-        "Up to 25 Clients / Locations",
-        "100% White Label Branding",
-        "Custom Client Dashboards",
-        "Automatic PDF Reporting",
-        "Team Members Assignment",
-        "Dedicated Success Manager"
+        "Up to 10 Client Accounts",
+        "Agency Dashboard",
+        "Multi-Client Reporting",
+        "Client Management Tools",
+        "Priority Agency Support"
       ],
       cta: "Start Free Trial",
       popular: false
     },
     {
       name: "Enterprise",
-      description: "Tailored for franchises and multi-unit organizations with custom needs.",
-      monthlyPrice: 499,
-      yearlyPrice: 399,
+      description: "Custom requirements.",
+      monthlyPrice: "Custom" as any,
+      yearlyPrice: "Custom" as any,
       features: [
         "Unlimited Locations",
-        "Custom CRM Integrations",
-        "Dedicated AI Voice Training",
-        "SLA & Priority Support",
-        "Multi-Organization Hierarchy",
-        "Custom API Access"
+        "Custom Integrations",
+        "Dedicated Success Manager",
+        "Custom Reporting",
+        "Enterprise SLA"
       ],
       cta: "Contact Sales",
       popular: false
@@ -103,24 +99,24 @@ export default function HomePage() {
 
   const faqs = [
     {
-      q: "How does the 14-day free trial work?",
-      a: "You get full, unrestricted access to the Growth plan features for 14 days. No credit card is required. You can upgrade, downgrade, or cancel at any time directly from your settings dashboard."
+      q: "What platforms do you support?",
+      a: "ReviewManagement supports Google Business Profile, Facebook Pages, Yelp, TripAdvisor, Trustpilot, and other major industry directories. You can monitor and respond to reviews across all of them from one dashboard."
     },
     {
-      q: "Can I cancel my subscription at any time?",
-      a: "Yes! There are no long-term contracts or lock-ins. If you decide to cancel, you will keep access to your paid features until the end of your current billing period, and you won't be charged again."
+      q: "How do review requests work?",
+      a: "Review requests are sent automatically via email or SMS when a client completes a transaction or check-in. You can import customer contacts manually or connect your CRM for fully automated campaigns."
     },
     {
-      q: "How do AI reply suggestions work?",
-      a: "Our advanced AI reads the sentiment, keywords, and tone of incoming reviews. It automatically generates high-quality draft responses tailored to the review. You can select the tone (Professional, Friendly, Empathetic, Brand Voice), edit if needed, and publish with one click."
+      q: "Can agencies manage multiple clients?",
+      a: "Yes! The Agency Plan is specifically designed for agencies. It offers a multi-client dashboard, client reporting capabilities, and options to white-label the reporting with your own agency branding."
     },
     {
-      q: "Do you support SMS and Email review campaigns?",
-      a: "Absolutely. You can import contacts or connect via CRM to trigger automated review requests via text messages (SMS) and emails. We provide conversion-optimized templates and a QR code generator for in-store collection."
+      q: "Do you offer free trials?",
+      a: "Yes, we offer a 14-day free trial on our plans so you can test all the automation, dashboard features, and campaign settings before committing."
     },
     {
-      q: "Can I white-label the dashboard for my agency?",
-      a: "Yes! With our Agency Plan, you can upload your custom logo, configure custom branding colors, generate PDF reports with your own agency header, and invite clients to log into a fully branded interface."
+      q: "How quickly can I get started?",
+      a: "You can connect your Google Business Profile and set up your first review request campaign in under 15 minutes. Our onboarding wizard walks you through every step."
     }
   ];
 
@@ -173,21 +169,21 @@ export default function HomePage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
-                Automate Your Reputation.<br />
-                <span className="gradient-text">Grow 5-Star Reviews.</span>
+                Turn Happy Customers Into<br />
+                <span className="gradient-text">More 5-Star Reviews</span>
               </h1>
               
               <p className="text-lg sm:text-xl text-slate-400 leading-relaxed">
-                Connect your business profiles, dispatch automated request campaigns via SMS or Email, and let AI craft professional responses in seconds. Get the visibility your business deserves.
+                Automate review requests, improve your reputation, and grow your business with ReviewManagement.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/register" className="btn-primary px-8 py-4 rounded-xl text-white font-bold text-center text-lg flex items-center justify-center gap-2 group">
-                  Start 14-Day Free Trial
+                  Start Free Trial
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link href="/demo" className="px-8 py-4 rounded-xl border border-slate-800 bg-slate-950/40 text-slate-300 font-semibold text-center text-lg hover:border-violet-500/40 hover:bg-violet-950/10 transition-all">
-                  Book A Live Demo
+                  Book a Demo
                 </Link>
               </div>
 
@@ -283,47 +279,66 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Core Benefits / Features */}
-      <section id="benefits" className="py-24 relative border-t border-slate-950 bg-slate-950/20 z-10">
+      {/* Why ReviewManagement */}
+      <section id="why-us" className="py-24 relative border-t border-slate-950 bg-slate-950/40 z-10">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="text-xs font-bold text-violet-400 tracking-wider uppercase">Value Proposition</h2>
-            <p className="text-3xl sm:text-4xl font-extrabold text-white">Designed to Scale Your Local Presence</p>
+            <h2 className="text-xs font-bold text-violet-400 tracking-wider uppercase">Why ReviewManagement</h2>
+            <p className="text-3xl sm:text-4xl font-extrabold text-white">Consistently Scale Your Reputation</p>
             <p className="text-slate-400 text-lg">
-              Manual review collection takes hours. Let ReviewManagement automate the process from initial transaction to final response.
+              Automated review requests designed for local businesses and agencies.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="glass-card rounded-2xl p-8 border border-white/5 relative group">
-              <div className="w-12 h-12 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center mb-6 text-violet-400">
-                <Clock className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">Save 12+ Hours Weekly</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                Automatically generate personalized review responses. Select your brand tone, audit in one click, and push directly to Google and Yelp in real-time.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { title: "Automated Campaign Requests", desc: "Send automated email and SMS review requests effortlessly.", icon: MessageSquare },
+              { title: "Consistently Grow Reviews", desc: "Increase review volume consistently over time without manual outreach.", icon: TrendingUp },
+              { title: "One Unified Dashboard", desc: "Monitor reputation performance in one centralized dashboard.", icon: Layers },
+              { title: "Tailored Architecture", desc: "Specially designed for local businesses and agencies to scale.", icon: Users }
+            ].map((why, idx) => {
+              const Icon = why.icon;
+              return (
+                <div key={idx} className="glass-card rounded-2xl p-8 border border-white/5 relative group hover:border-violet-500/30 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center mb-6 text-violet-400">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-3">{why.title}</h3>
+                  <p className="text-slate-400 text-xs leading-relaxed">{why.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-            <div className="glass-card rounded-2xl p-8 border border-white/5 relative group">
-              <div className="w-12 h-12 rounded-xl bg-cyan-600/10 border border-cyan-500/20 flex items-center justify-center mb-6 text-cyan-400">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">Higher Google Maps SEO</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                Review frequency, keywords, and response rates are primary factors for local searches. Automatically improve your listing rankings.
-              </p>
-            </div>
+      {/* Core Benefits */}
+      <section id="benefits" className="py-24 relative border-t border-slate-950 bg-slate-950/20 z-10">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <h2 className="text-xs font-bold text-cyan-400 tracking-wider uppercase">Benefits</h2>
+            <p className="text-3xl sm:text-4xl font-extrabold text-white">Unlock Business Growth Outcomes</p>
+          </div>
 
-            <div className="glass-card rounded-2xl p-8 border border-white/5 relative group">
-              <div className="w-12 h-12 rounded-xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">Intercept Negative Feedback</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                Create custom landing page filters to capture dissatisfied clients privately, letting your managers resolve complaints before they reach public forums.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            {[
+              { title: "Increase Trust", desc: "Increase customer trust by displaying active positive sentiment.", icon: ShieldCheck },
+              { title: "Boost Local SEO", desc: "Improve local SEO visibility to attract nearby traffic.", icon: Clock },
+              { title: "Generate Reviews", desc: "Generate more positive reviews on autopilot.", icon: Sparkles },
+              { title: "Automation Advantage", desc: "Save valuable staff time through robust automation.", icon: Check },
+              { title: "Measure Returns", desc: "Track measurable ROI on every outreach dollar spent.", icon: TrendingUp }
+            ].map((ben, idx) => {
+              const Icon = ben.icon;
+              return (
+                <div key={idx} className="glass-card rounded-2xl p-6 border border-white/5 hover:border-cyan-500/30 transition-all text-center">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-600/10 border border-cyan-500/20 flex items-center justify-center mb-4 mx-auto text-cyan-400">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-sm font-bold text-white mb-2">{ben.title}</h3>
+                  <p className="text-slate-400 text-[11px] leading-relaxed">{ben.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -427,11 +442,22 @@ export default function HomePage() {
                     <p className="text-xs text-slate-500 min-h-10">{plan.description}</p>
                     
                     <div className="my-6">
-                      <span className="text-4xl font-extrabold text-white">${price}</span>
-                      <span className="text-slate-500 text-sm"> / mo</span>
-                      <div className="text-[10px] text-slate-500 mt-1">
-                        {billingPeriod === "yearly" ? `Billed annually ($${price * 12}/yr)` : "Billed monthly"}
-                      </div>
+                      {typeof price === "number" ? (
+                        <>
+                          <span className="text-4xl font-extrabold text-white">${price}</span>
+                          <span className="text-slate-500 text-sm"> / mo</span>
+                          <div className="text-[10px] text-slate-500 mt-1">
+                            {billingPeriod === "yearly" ? `Billed annually ($${price * 12}/yr)` : "Billed monthly"}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-4xl font-extrabold text-white">Custom</span>
+                          <div className="text-[10px] text-slate-500 mt-1">
+                            Tailored for custom scale
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     <ul className="space-y-3 pt-6 border-t border-slate-900">
@@ -508,19 +534,16 @@ export default function HomePage() {
         
         <div className="container mx-auto px-6 lg:px-8 text-center max-w-4xl space-y-8">
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-            Stop Losing Customers to Competitors.<br />
-            <span className="gradient-text">Take Control of Your Reputation.</span>
+            Grow Your Online Reputation Today.<br />
+            <span className="gradient-text">See ReviewManagement in Action.</span>
           </h2>
-          <p className="text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-            Join thousands of small businesses and agencies using ReviewManagement to turn happy clients into reviews automatically.
-          </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
             <Link href="/register" className="btn-primary px-8 py-4 rounded-xl text-white font-bold text-lg">
-              Start Free 14-Day Trial
+              Start Your Free Trial
             </Link>
             <Link href="/demo" className="px-8 py-4 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-300 font-semibold hover:border-violet-500/40 hover:bg-violet-950/10 transition-all text-lg">
-              Talk to an Expert
+              Book Your Demo
             </Link>
           </div>
 

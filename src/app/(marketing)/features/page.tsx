@@ -13,28 +13,28 @@ export const metadata: Metadata = {
 export default function FeaturesPage() {
     const features = [
         {
-            title: "Automated Review Collection",
-            description: "Automatically request reviews via email or SMS. Set up campaigns that run on autopilot.",
+            title: "Review Campaign Automation",
+            description: "Set up conversion-focused campaign sequences to request and collect reviews automatically.",
         },
         {
-            title: "Real-time Monitoring",
-            description: "Get notified instantly via email, Slack, or SMS when you receive a new review on any platform.",
+            title: "Email & SMS Requests",
+            description: "Reach customers instantly on their preferred channel with high-deliverability email and text messages.",
         },
         {
-            title: "Sentiment Tracking",
-            description: "Track trends in customer sentiment over time. Identify problem areas before they become issues.",
+            title: "Customer Management",
+            description: "Organize client lists, partition contact groups, and review message dispatch history seamlessly.",
         },
         {
-            title: "Analytics Dashboard",
-            description: "Visual insights into your reputation performance. Track volume, rating, and sources.",
+            title: "Agency Multi-Client Dashboard",
+            description: "Monitor and manage reputation campaigns across multiple accounts or franchises in one centralized view.",
         },
         {
-            title: "Multi-location Support",
-            description: "Manage reviews for hundreds of locations from one single account with location-specific settings.",
+            title: "Reporting & Analytics",
+            description: "Generate detailed reputation insights and configure automated PDF report exports for stakeholders.",
         },
         {
-            title: "Cloud-based System",
-            description: "Access your dashboard from anywhere, anytime. Secure, reliable, and always up to date.",
+            title: "Review Performance Tracking",
+            description: "Track aggregate review volume, average star rating increases, and platform conversion rates in real-time.",
         },
     ];
 

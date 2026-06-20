@@ -110,9 +110,9 @@ export default function AboutPage() {
                                 <Heart className="w-5 h-5 text-primary" />
                                 <h2 className="text-xl font-bold text-foreground">Our Mission</h2>
                             </div>
-                            <p className="text-muted-foreground leading-relaxed italic">
-                                "To give every business owner — from a family-run motel to a multi-location restaurant group — the tools to manage their reputation effortlessly, respond to every review, and turn customer feedback into real business growth."
-                            </p>
+                            <div className="text-muted-foreground leading-relaxed space-y-4">
+                                <p className="italic font-medium">"ReviewManagement is built by Openrize. We help businesses automate reputation growth. Our mission is to make review generation simple and measurable."</p>
+                            </div>
                         </div>
                         {/* Timeline */}
                         <div className="space-y-3">

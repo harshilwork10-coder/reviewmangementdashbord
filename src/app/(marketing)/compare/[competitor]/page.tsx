@@ -23,7 +23,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
     "podium": {
       competitor: "Podium",
       tagline: "Get a modern, feature-rich reputation dashboard at a fraction of Podium's price.",
-      pricingUs: "$29 - $199/mo",
+      pricingUs: "$49 - $299/mo",
       pricingThem: "$249 - $599/mo",
       bullets: [
         "No long-term contracts: Podium demands rigid annual commitments. Cancel ReviewManagement at any time.",
@@ -32,7 +32,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
         "Fast self-serve setup: Go live in 15 minutes, bypassing painful sales onboarding calls."
       ],
       features: [
-        { name: "Starting Cost", us: "$29/mo", them: "$249/mo", note: "Save up to $2,600+ annually" },
+        { name: "Starting Cost", us: "$49/mo", them: "$249/mo", note: "Save up to $2,400+ annually" },
         { name: "Contract Commitment", us: "None", them: "Annual Lock", note: "Flexible monthly options" },
         { name: "AI response writer", us: true, them: true, note: "Our AI supports 4 distinct tones" },
         { name: "White-label branding", us: true, them: false, note: "Essential for marketing agencies" },
@@ -43,7 +43,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
     "birdeye": {
       competitor: "Birdeye",
       tagline: "All the enterprise power, none of the setup friction or hidden fees.",
-      pricingUs: "$79/mo (Growth plan)",
+      pricingUs: "$99/mo (Growth plan)",
       pricingThem: "$350+/mo (Standard)",
       bullets: [
         "Transparent billing: No hidden activation fees or surprise API request charges.",
@@ -52,7 +52,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
         "Optimized for agencies: White-labeled dashboards, client portals, and automated PDF report scheduling."
       ],
       features: [
-        { name: "Monthly Pricing", us: "$79/mo", them: "$350+/mo", note: "Save over $3,200 every year" },
+        { name: "Monthly Pricing", us: "$99/mo", them: "$350+/mo", note: "Save over $3,000 every year" },
         { name: "Onboarding Time", us: "15 minutes", them: "2+ Weeks", note: "Self-serve vs slow sales calls" },
         { name: "AI Reply Center", us: true, them: true, note: "Drafts review responses in seconds" },
         { name: "Agency White-Label", us: true, them: false, note: "Add client portals under your logo" },
@@ -63,7 +63,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
     "nicejob": {
       competitor: "NiceJob",
       tagline: "Move past basic review gathering into professional multi-location control and agency expansion.",
-      pricingUs: "$29 - $79/mo",
+      pricingUs: "$49 - $99/mo",
       pricingThem: "$75 - $175/mo",
       bullets: [
         "Multi-location leadership: Compare ratings and review velocities across all branches.",
@@ -79,19 +79,57 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
         { name: "Negative feedback gates", us: true, them: false, note: "Resolve issues privately first" }
       ]
     },
+    "grade.us": {
+      competitor: "Grade.us",
+      tagline: "A simpler, more intuitive agency review builder without the steep learning curve.",
+      pricingUs: "$299/mo (Agency Plan)",
+      pricingThem: "$180 - $350/mo (Standard Agency)",
+      bullets: [
+        "No complex hierarchy: Grade.us setups require deep nested organization. We keep client sub-accounts simple.",
+        "Modern AI reply integration: ReviewManagement has tone-specific AI generation; Grade.us relies on pre-saved snippets.",
+        "Intuitive self-serve UI: Help clients navigate their dashboards without providing hours of hands-on training.",
+        "Frictionless SMS campaigns: Trigger text review invites directly from client contact spreadsheets in seconds."
+      ],
+      features: [
+        { name: "Starting Cost", us: "$299/mo (10 clients)", them: "$180/mo (3 clients)", note: "We offer better scaling margins" },
+        { name: "Learning Curve", us: "Under 15 mins", them: "Steep / Complex", note: "Bypass intensive client training" },
+        { name: "AI reply helper", us: true, them: false, note: "Grade.us lacks tone-based AI replying" },
+        { name: "Agency Whitelabeling", us: true, them: true, note: "Both systems support white labeling" },
+        { name: "Multi-location reports", us: true, them: true, note: "Track performance across accounts" }
+      ]
+    },
+    "grade": {
+      competitor: "Grade.us",
+      tagline: "A simpler, more intuitive agency review builder without the steep learning curve.",
+      pricingUs: "$299/mo (Agency Plan)",
+      pricingThem: "$180 - $350/mo (Standard Agency)",
+      bullets: [
+        "No complex hierarchy: Grade.us setups require deep nested organization. We keep client sub-accounts simple.",
+        "Modern AI reply integration: ReviewManagement has tone-specific AI generation; Grade.us relies on pre-saved snippets.",
+        "Intuitive self-serve UI: Help clients navigate their dashboards without providing hours of training.",
+        "Frictionless SMS campaigns: Trigger text review invites directly from client contact spreadsheets in seconds."
+      ],
+      features: [
+        { name: "Starting Cost", us: "$299/mo (10 clients)", them: "$180/mo (3 clients)", note: "We offer better scaling margins" },
+        { name: "Learning Curve", us: "Under 15 mins", them: "Steep / Complex", note: "Bypass intensive client training" },
+        { name: "AI reply helper", us: true, them: false, note: "Grade.us lacks tone-based AI replying" },
+        { name: "Agency Whitelabeling", us: true, them: true, note: "Both systems support white labeling" },
+        { name: "Multi-location reports", us: true, them: true, note: "Track performance across accounts" }
+      ]
+    },
     "broadly": {
       competitor: "Broadly",
       tagline: "Automate your local business operations without the high entry pricing of Broadly.",
-      pricingUs: "$29 - $199/mo",
+      pricingUs: "$49 - $299/mo",
       pricingThem: "$200 - $350/mo",
       bullets: [
-        "Cost Efficiency: Start collecting reviews for just $29/mo compared to Broadly's expensive entry tiers.",
+        "Cost Efficiency: Start collecting reviews for just $49/mo compared to Broadly's expensive entry tiers.",
         "Smart AI Assistant: Generate context-aware review replies in multiple tones instantly.",
         "No Contract Commitments: Month-to-month flexibility. Cancel whenever you wish.",
         "Custom Brand Voices: Define and train the AI on your specific terminology."
       ],
       features: [
-        { name: "Starting Cost", us: "$29/mo", them: "$200/mo", note: "Save over $2,000+ annually" },
+        { name: "Starting Cost", us: "$49/mo", them: "$200/mo", note: "Save over $1,800+ annually" },
         { name: "Contract Commitment", us: "None", them: "Annual Lock", note: "Bypass rigid long-term commitments" },
         { name: "AI reply helper", us: true, them: false, note: "Broadly lacks tone-based AI responders" },
         { name: "White-label branding", us: true, them: false, note: "Keep agency brand intact" },
@@ -102,7 +140,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
     "reputation": {
       competitor: "Reputation.com",
       tagline: "Enterprise multi-location oversight with none of the hidden API fees or software complexity.",
-      pricingUs: "$79 - $199/mo",
+      pricingUs: "$99 - $299/mo",
       pricingThem: "$450+/mo",
       bullets: [
         "Pricing Transparency: Clear, upfront billing with zero hidden set-up fees or API requests surcharges.",
@@ -111,7 +149,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
         "No Contract Lockups: Control your subscription on your own terms."
       ],
       features: [
-        { name: "Starting Cost", us: "$79/mo", them: "$450/mo", note: "Save $4,400+ annually per store" },
+        { name: "Starting Cost", us: "$99/mo", them: "$450/mo", note: "Save $4,200+ annually per store" },
         { name: "Self-serve onboarding", us: "15 minutes", them: "2-4 Weeks", note: "Instant dashboard activation" },
         { name: "AI Reply suggestions", us: true, them: true, note: "We support customized brand voice directives" },
         { name: "White-Label Portal", us: true, them: false, note: "Offer software under your agency name" },
@@ -121,7 +159,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
     "reputation.com": {
       competitor: "Reputation.com",
       tagline: "Enterprise multi-location oversight with none of the hidden API fees or software complexity.",
-      pricingUs: "$79 - $199/mo",
+      pricingUs: "$99 - $299/mo",
       pricingThem: "$450+/mo",
       bullets: [
         "Pricing Transparency: Clear, upfront billing with zero hidden set-up fees or API requests surcharges.",
@@ -130,7 +168,7 @@ export default async function ComparePage({ params }: { params: Promise<{ compet
         "No Contract Lockups: Control your subscription on your own terms."
       ],
       features: [
-        { name: "Starting Cost", us: "$79/mo", them: "$450/mo", note: "Save $4,400+ annually per store" },
+        { name: "Starting Cost", us: "$99/mo", them: "$450/mo", note: "Save $4,200+ annually per store" },
         { name: "Self-serve onboarding", us: "15 minutes", them: "2-4 Weeks", note: "Instant dashboard activation" },
         { name: "AI Reply suggestions", us: true, them: true, note: "We support customized brand voice directives" },
         { name: "White-Label Portal", us: true, them: false, note: "Offer software under your agency name" },

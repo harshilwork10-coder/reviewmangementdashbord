@@ -197,6 +197,18 @@ export default function SuperAdminCRMPage() {
     const [openP1Tickets, setOpenP1Tickets] = useState(0); // number of open tickets
     const [stripeStatus, setStripeStatus] = useState<"Active" | "Dunning">("Active");
 
+    // Upsell States
+    const [upsellLocations, setUpsellLocations] = useState(false); // +$30
+    const [upsellReporting, setUpsellReporting] = useState(false); // +$20
+    const [upsellPrioritySupport, setUpsellPrioritySupport] = useState(false); // +$15
+    const [upsellAiFeatures, setUpsellAiFeatures] = useState(false); // +$25
+
+    const upsellTotal = 
+        (upsellLocations ? 30 : 0) +
+        (upsellReporting ? 20 : 0) +
+        (upsellPrioritySupport ? 15 : 0) +
+        (upsellAiFeatures ? 25 : 0);
+
     // Compute Health score logic
     const loginScore = Math.min(100, loginFreq * 10);
     const campaignScore = Math.min(100, campaignActivity * 2);
@@ -248,11 +260,11 @@ export default function SuperAdminCRMPage() {
 
     // ── Tab 5: Operations KPIs & Gates States ──
     const [deliverables, setDeliverables] = useState([
-        { id: "pd13_1", label: "Onboarding SOP approved", checked: true },
-        { id: "pd13_2", label: "Support workflow documented", checked: true },
-        { id: "pd13_3", label: "Health scoring model approved", checked: true },
-        { id: "pd13_4", label: "Renewal process defined", checked: true },
-        { id: "pd13_5", label: "Operations playbook ready", checked: false },
+        { id: "pd13_1", label: "Retention framework approved", checked: true },
+        { id: "pd13_2", label: "Renewal playbook documented", checked: true },
+        { id: "pd13_3", label: "Upsell strategy finalized", checked: true },
+        { id: "pd13_4", label: "Health scoring model approved", checked: true },
+        { id: "pd13_5", label: "Customer success program ready", checked: false },
     ]);
 
     const toggleDeliverable = (id: string) => {
@@ -568,21 +580,21 @@ export default function SuperAdminCRMPage() {
 
             {/* ── Tab 3: Health Scoring Calculator ── */}
             {activeTab === "health" && (
-                <div className="glass-card rounded-2xl p-6 border border-border/60 max-w-3xl mx-auto">
+                <div className="glass-card rounded-2xl p-6 border border-border/60 max-w-4xl mx-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-sm font-bold text-white flex items-center gap-2">
                             <Sliders className="w-4.5 h-4.5 text-cyan-400" />
-                            Multi-Vector Health Scoring Engine
+                            Multi-Vector Health &amp; Upsell Modeler
                         </h3>
-                        <span className="text-[10px] text-slate-500 font-mono">Calculates aggregate customer churn risk</span>
+                        <span className="text-[10px] text-slate-500 font-mono">Customer adoption &amp; retention health</span>
                     </div>
                     <p className="text-xs text-slate-400 leading-relaxed mb-6">
-                        Configure customer activity metrics below to determine their real-time Customer Health Score.
+                        Evaluate real-time Customer Health Scores to coordinate proactive churn prevention, upsell campaigns, and referral outreach.
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                         {/* Metrics selectors */}
-                        <div className="space-y-4">
+                        <div className="lg:col-span-1 space-y-4">
                             <div>
                                 <label className="text-[9px] text-slate-500 block mb-1">Target Merchant</label>
                                 <select
@@ -641,9 +653,9 @@ export default function SuperAdminCRMPage() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="text-[9px] text-slate-500 block mb-1">Open P1 Support Tickets</label>
+                                    <label className="text-[9px] text-slate-500 block mb-1">Open Tickets</label>
                                     <input
                                         type="number"
                                         min="0"
@@ -654,157 +666,299 @@ export default function SuperAdminCRMPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[9px] text-slate-500 block mb-1">Stripe Billing Status</label>
+                                    <label className="text-[9px] text-slate-500 block mb-1">Billing Status</label>
                                     <select
                                         value={stripeStatus}
                                         onChange={(e) => setStripeStatus(e.target.value as any)}
                                         className="bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none w-full"
                                     >
                                         <option value="Active">Active</option>
-                                        <option value="Dunning">Dunning / Failing</option>
+                                        <option value="Dunning">Dunning</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         {/* Calculated Score Display */}
-                        <div className={`p-6 rounded-2xl border flex flex-col justify-between h-[300px] text-center ${healthColor}`}>
-                            <div>
-                                <span className="text-[10px] uppercase font-bold tracking-wider opacity-60">Aggregate Health Score</span>
-                                <div className="text-6xl font-black font-mono mt-4">{boundedHealthScore}</div>
-                                <span className="text-xs font-bold block mt-2">Health Band: {healthBand}</span>
+                        <div className={`lg:col-span-2 p-6 rounded-2xl border flex flex-col md:flex-row gap-6 ${healthColor}`}>
+                            <div className="flex-1 flex flex-col justify-between text-center min-h-[220px]">
+                                <div>
+                                    <span className="text-[10px] uppercase font-bold tracking-wider opacity-60">Aggregate Health Score</span>
+                                    <div className="text-6xl font-black font-mono mt-3">{boundedHealthScore}</div>
+                                    <span className="text-xs font-bold block mt-2">Band: {healthBand}</span>
+                                </div>
+
+                                <div className="space-y-3.5 pt-4 border-t border-white/5">
+                                    {boundedHealthScore >= 80 ? (
+                                        <>
+                                            <span className="text-[10px] block font-semibold leading-normal">Merchant is in the Advocacy phase. Ideal candidate for referrals and upsells.</span>
+                                            <button
+                                                onClick={() => {
+                                                    addLog(`[CS Advocacy] Dispatched referral incentive program invitation to ${calcMerchant}.`);
+                                                    addToast("success", "Referral invitation dispatched!");
+                                                }}
+                                                className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition-all cursor-pointer shadow-lg shadow-indigo-500/15"
+                                            >
+                                                Request Referral (Incentives Active)
+                                            </button>
+                                        </>
+                                    ) : boundedHealthScore >= 50 ? (
+                                        <>
+                                            <span className="text-[10px] block font-semibold leading-normal">Merchant adoption is stable. Monitor usage and run education campaigns.</span>
+                                            <button
+                                                onClick={() => {
+                                                    addLog(`[CS Outreach] Scheduled routine success call with ${calcMerchant}.`);
+                                                    addToast("info", "Walkthrough scheduled.");
+                                                }}
+                                                className="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg transition-all cursor-pointer shadow-lg shadow-amber-500/15"
+                                            >
+                                                Schedule Adoption Check
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="text-[10px] block font-semibold leading-normal animate-pulse">At Churn Risk! Decline in metrics detected. Run targeted CS consultations.</span>
+                                            <button
+                                                onClick={() => {
+                                                    addLog(`[CS Intercept] Urgent CS Churn Intercept Consultation scheduled for ${calcMerchant}.`);
+                                                    addToast("error", "CS Intercept Alert Dispatched!");
+                                                }}
+                                                className="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg transition-all cursor-pointer shadow-lg shadow-rose-500/15 animate-bounce"
+                                            >
+                                                Trigger CS consultation
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className="space-y-3 pt-4 border-t border-white/5">
-                                {boundedHealthScore >= 80 ? (
-                                    <>
-                                        <span className="text-[10px] block font-semibold leading-normal">Merchant is healthy and active. Ready for upsell proposals or referral invites.</span>
-                                        <button
-                                            onClick={() => {
-                                                addLog(`[CS Outreach] Healthy Upsell proposal sent to ${calcMerchant}.`);
-                                                addToast("success", "Upsell proposal dispatched.");
-                                            }}
-                                            className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all cursor-pointer shadow-lg shadow-emerald-500/15"
-                                        >
-                                            Propose Tier Upgrade
-                                        </button>
-                                    </>
-                                ) : boundedHealthScore >= 50 ? (
-                                    <>
-                                        <span className="text-[10px] block font-semibold leading-normal">Mild engagement drop. CSM optimization check recommended.</span>
-                                        <button
-                                            onClick={() => {
-                                                addLog(`[CS Outreach] Scheduled campaign check outreach for ${calcMerchant}.`);
-                                                addToast("info", "Optimization checklist dispatched.");
-                                            }}
-                                            className="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg transition-all cursor-pointer shadow-lg shadow-amber-500/15"
-                                        >
-                                            Schedule Optimization Call
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span className="text-[10px] block font-semibold leading-normal animate-pulse">CRITICAL: Highly likely to churn. Proactive CS intervention required immediately.</span>
-                                        <button
-                                            onClick={() => {
-                                                addLog(`[CS Outreach] Urgent Churn Intercept protocol initiated for ${calcMerchant}.`);
-                                                addToast("error", "Urgent CSM alert dispatched!");
-                                            }}
-                                            className="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg transition-all cursor-pointer shadow-lg shadow-rose-500/15"
-                                        >
-                                            Initiate Churn Intercept
-                                        </button>
-                                    </>
-                                )}
+                            {/* Upsell Modeler Panel for healthy customers */}
+                            <div className="flex-1 p-4 bg-slate-950/80 border border-white/5 rounded-xl flex flex-col justify-between text-left text-slate-300">
+                                <div>
+                                    <h4 className="text-xs font-bold text-white mb-3 flex items-center gap-1.5">
+                                        <Sparkles className="w-3.5 h-3.5 text-yellow-400" /> CS Upsell Modeler
+                                    </h4>
+                                    <div className="space-y-2 text-[10px] font-mono">
+                                        <label className="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-white/5">
+                                            <input
+                                                type="checkbox"
+                                                checked={upsellLocations}
+                                                onChange={e => setUpsellLocations(e.target.checked)}
+                                                className="accent-indigo-500"
+                                            />
+                                            <span>Additional Locations (+$30/mo)</span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-white/5">
+                                            <input
+                                                type="checkbox"
+                                                checked={upsellReporting}
+                                                onChange={e => setUpsellReporting(e.target.checked)}
+                                                className="accent-indigo-500"
+                                            />
+                                            <span>Premium Reporting (+$20/mo)</span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-white/5">
+                                            <input
+                                                type="checkbox"
+                                                checked={upsellPrioritySupport}
+                                                onChange={e => setUpsellPrioritySupport(e.target.checked)}
+                                                className="accent-indigo-500"
+                                            />
+                                            <span>Priority Support (+$15/mo)</span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-white/5">
+                                            <input
+                                                type="checkbox"
+                                                checked={upsellAiFeatures}
+                                                onChange={e => setUpsellAiFeatures(e.target.checked)}
+                                                className="accent-indigo-500"
+                                            />
+                                            <span>Future AI Features (+$25/mo)</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 pt-3 border-t border-white/5 space-y-3">
+                                    <div className="flex justify-between text-xs font-bold">
+                                        <span>Upsell MRR Added:</span>
+                                        <span className="text-indigo-400 font-mono">+${upsellTotal}/mo</span>
+                                    </div>
+                                    <button
+                                        disabled={upsellTotal === 0 || boundedHealthScore < 80}
+                                        onClick={() => {
+                                            addLog(`[CS Upsell] Executed Contract Upgrade for ${calcMerchant} | Added: +$${upsellTotal}/mo.`);
+                                            addToast("success", "Upsell contract executed!");
+                                            setUpsellLocations(false);
+                                            setUpsellReporting(false);
+                                            setUpsellPrioritySupport(false);
+                                            setUpsellAiFeatures(false);
+                                        }}
+                                        className={`w-full py-1.5 rounded text-[10px] font-bold transition-all ${
+                                            upsellTotal === 0 || boundedHealthScore < 80
+                                                ? "bg-slate-900 border border-white/5 text-slate-500 cursor-not-allowed"
+                                                : "bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
+                                        }`}
+                                    >
+                                        Execute Contract Upsell
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* ── Tab 4: Renewals & Retention ── */}
-            {activeTab === "renewals" && (
-                <div className="glass-card rounded-2xl p-6 border border-border/60">
-                    <div className="flex justify-between items-center mb-5">
-                        <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                            <CalendarDays className="w-4.5 h-4.5 text-orange-400" />
-                            Customer Renewal Pipeline
-                        </h3>
-                        <span className="text-[10px] text-slate-500 font-mono">90/60/30-day renewal cycle checkpoints</span>
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed mb-6">
-                        Monitor contract expiration schedules. Dispatch proactive outreach checkups to secure subscription renewals.
-                    </p>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr className="border-b border-white/5 text-slate-500 font-semibold">
-                                    <th className="pb-2">Merchant</th>
-                                    <th className="pb-2">Current subscription</th>
-                                    <th className="pb-2">Expiration Date</th>
-                                    <th className="pb-2">Renewal Stage</th>
-                                    <th className="pb-2">Outreach</th>
-                                    <th className="pb-2 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {renewals.map((r) => (
-                                    <tr key={r.id} className="border-b border-white/5 text-slate-300 hover:bg-white/1 font-mono text-[11px]">
-                                        <td className="py-3 font-bold text-slate-200">{r.name}</td>
-                                        <td className="py-3">{r.plan}</td>
-                                        <td className="py-3">{r.date}</td>
-                                        <td className="py-3">
-                                            <span className={`inline-flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                                                r.stage === "90-Day Review" ? "bg-slate-800 text-slate-400" :
-                                                r.stage === "60-Day Check" ? "bg-blue-500/10 border border-blue-500/20 text-blue-400" :
-                                                r.stage === "30-Day Outreach" ? "bg-amber-500/10 border border-amber-500/20 text-amber-400" :
-                                                "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold"
-                                            }`}>
-                                                {r.stage}
-                                            </span>
-                                        </td>
-                                        <td className="py-3">
-                                            {r.outreachSent ? (
-                                                <span className="text-[10px] text-emerald-400 font-bold">Sent ✓</span>
-                                            ) : (
-                                                <span className="text-[10px] text-slate-500">Pending</span>
-                                            )}
-                                        </td>
-                                        <td className="py-3 text-right">
-                                            {r.stage !== "Renewed" ? (
-                                                <div className="inline-flex gap-1.5">
-                                                    <button
-                                                        disabled={r.outreachSent}
-                                                        onClick={() => handleSendRenewalOutreach(r.id)}
-                                                        className={`text-[9px] px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                                                            r.outreachSent
-                                                                ? "border-slate-800 text-slate-600 cursor-not-allowed"
-                                                                : "border-indigo-500/30 text-indigo-400 hover:bg-indigo-600 hover:text-white"
-                                                        }`}
-                                                    >
-                                                        Outreach
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleConfirmRenewal(r.id)}
-                                                        className="text-[9px] bg-emerald-600/20 hover:bg-emerald-600 border border-emerald-500/30 text-emerald-400 hover:text-white px-2 py-0.5 rounded transition-all cursor-pointer font-bold"
-                                                    >
-                                                        Confirm Renewal
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <span className="text-[10px] text-emerald-500 font-bold">Renewed ✓</span>
-                                            )}
-                                        </td>
+            {/* ── Tab 4: Renewals & QBR Playbook ── */}
+            {activeTab === "renewals" && (
+                <div className="space-y-6">
+                    <div className="glass-card rounded-2xl p-6 border border-border/60">
+                        <div className="flex justify-between items-center mb-5">
+                            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                                <CalendarDays className="w-4.5 h-4.5 text-orange-400" />
+                                Customer Renewal Pipeline
+                            </h3>
+                            <span className="text-[10px] text-slate-500 font-mono">90/60/30-day renewal cycle checkpoints</span>
+                        </div>
+                        <p className="text-xs text-slate-400 leading-relaxed mb-6">
+                            Monitor contract expiration schedules. Dispatch proactive outreach checkups to secure subscription renewals.
+                        </p>
+
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr className="border-b border-white/5 text-slate-500 font-semibold">
+                                        <th className="pb-2">Merchant</th>
+                                        <th className="pb-2">Current subscription</th>
+                                        <th className="pb-2">Expiration Date</th>
+                                        <th className="pb-2">Renewal Stage</th>
+                                        <th className="pb-2">Outreach</th>
+                                        <th className="pb-2 text-right">Actions</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    {renewals.map((r) => (
+                                        <tr key={r.id} className="border-b border-white/5 text-slate-300 hover:bg-white/1 font-mono text-[11px]">
+                                            <td className="py-3 font-bold text-slate-200">{r.name}</td>
+                                            <td className="py-3">{r.plan}</td>
+                                            <td className="py-3">{r.date}</td>
+                                            <td className="py-3">
+                                                <span className={`inline-flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                    r.stage === "90-Day Review" ? "bg-slate-800 text-slate-400" :
+                                                    r.stage === "60-Day Check" ? "bg-blue-500/10 border border-blue-500/20 text-blue-400" :
+                                                    r.stage === "30-Day Outreach" ? "bg-amber-500/10 border border-amber-500/20 text-amber-400" :
+                                                    "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold"
+                                                }`}>
+                                                    {r.stage}
+                                                </span>
+                                            </td>
+                                            <td className="py-3">
+                                                {r.outreachSent ? (
+                                                    <span className="text-[10px] text-emerald-400 font-bold">Sent ✓</span>
+                                                ) : (
+                                                    <span className="text-[10px] text-slate-500">Pending</span>
+                                                )}
+                                            </td>
+                                            <td className="py-3 text-right">
+                                                {r.stage !== "Renewed" ? (
+                                                    <div className="inline-flex gap-1.5">
+                                                        <button
+                                                            disabled={r.outreachSent}
+                                                            onClick={() => handleSendRenewalOutreach(r.id)}
+                                                            className={`text-[9px] px-2 py-0.5 rounded border transition-all cursor-pointer ${
+                                                                r.outreachSent
+                                                                    ? "border-slate-800 text-slate-600 cursor-not-allowed"
+                                                                    : "border-indigo-500/30 text-indigo-400 hover:bg-indigo-600 hover:text-white"
+                                                            }`}
+                                                        >
+                                                            Outreach
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleConfirmRenewal(r.id)}
+                                                            className="text-[9px] bg-emerald-600/20 hover:bg-emerald-600 border border-emerald-500/30 text-emerald-400 hover:text-white px-2 py-0.5 rounded transition-all cursor-pointer font-bold"
+                                                        >
+                                                            Confirm Renewal
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-[10px] text-emerald-500 font-bold">Renewed ✓</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* QBR Scheduler & ROI Dashboard */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* QBR logs */}
+                        <div className="glass-card rounded-2xl p-6 border border-border/60 space-y-4">
+                            <div>
+                                <h3 className="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                                    <Clock className="w-4.5 h-4.5 text-indigo-400" /> Quarterly Business Reviews (QBR) Scheduler
+                                </h3>
+                                <p className="text-xs text-slate-400">
+                                    Schedule QBRs, align on business goals, and review optimization recommendations.
+                                </p>
+                            </div>
+                            <div className="space-y-3 font-mono text-[10.5px]">
+                                {[
+                                    { partner: "Greenwood Med Spa", date: "Q2 QBR - Completed", metrics: "+420 reviews, 4.8★ local SEO ranking improved." },
+                                    { partner: "Apex Dental Clinic", date: "Q2 QBR - Scheduled (June 28)", metrics: "Target: Align review capture rate to transaction volume." },
+                                    { partner: "Skyline Car Care", date: "Q3 QBR - Pending Setup", metrics: "Focus: Optimize campaign templates text messaging." }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="p-3 bg-slate-950/60 border border-white/5 rounded-xl text-xs space-y-1">
+                                        <div className="flex justify-between items-center">
+                                            <span className="font-bold text-slate-200">{item.partner}</span>
+                                            <span className="text-[9px] font-bold text-indigo-400">{item.date}</span>
+                                        </div>
+                                        <p className="text-[10px] text-slate-500 font-sans leading-relaxed">{item.metrics}</p>
+                                    </div>
                                 ))}
-                            </tbody>
-                        </table>
+                            </div>
+                        </div>
+
+                        {/* CS ROI outcome dashboard */}
+                        <div className="glass-card rounded-2xl p-6 border border-border/60 space-y-4 flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                                    <TrendingUp className="w-4.5 h-4.5 text-emerald-400" /> ROI Outcomes &amp; Value Metrics
+                                </h3>
+                                <p className="text-xs text-slate-400">
+                                    Demonstrated ROI results used to fuel referrals and expansion upsells.
+                                </p>
+                            </div>
+                            <div className="space-y-2.5 text-[11px] text-slate-400 font-mono">
+                                <div className="flex justify-between">
+                                    <span>Average GBP traffic growth:</span>
+                                    <span className="text-white font-bold font-sans">+38% YoY increase</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Review-to-customer conversion:</span>
+                                    <span className="text-emerald-400 font-bold">18.4% (Industry Avg: 9%)</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Estimated revenue generated / client:</span>
+                                    <span className="text-emerald-400 font-bold">+$2,450/month</span>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    addLog("[QBR] Dispatched automated co-branded ROI reports to all active customers.");
+                                    addToast("success", "ROI reports sent to merchants.");
+                                }}
+                                className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all cursor-pointer text-center"
+                            >
+                                Dispatch ROI Reports to Merchants
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
 
-            {/* ── Tab 5: Operations KPIs & Gates ── */}
+            {/* ── Tab 5: CS KPIs & Part 13 Gates ── */}
             {activeTab === "kpis" && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     {/* Left: KPIs widgets */}
@@ -814,9 +968,9 @@ export default function SuperAdminCRMPage() {
                                 <div>
                                     <div className="text-2xl font-black text-white mb-1 font-mono">94.8%</div>
                                     <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1 flex items-center gap-1">
-                                        <UserCheck className="w-3.5 h-3.5 text-emerald-400" /> Retention Rate
+                                        <UserCheck className="w-3.5 h-3.5 text-emerald-400" /> Customer Retention
                                     </div>
-                                    <p className="text-[10px] text-slate-500">Merchant yearly retention</p>
+                                    <p className="text-[10px] text-slate-500 font-sans">Yearly logo retention rate</p>
                                 </div>
                                 <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                                     <TrendingUp className="w-4 h-4 text-emerald-400" />
@@ -825,11 +979,11 @@ export default function SuperAdminCRMPage() {
 
                             <div className="glass-card rounded-2xl p-5 border border-border/60 flex items-start justify-between">
                                 <div>
-                                    <div className="text-2xl font-black text-white mb-1 font-mono">12.5 min</div>
+                                    <div className="text-2xl font-black text-white mb-1 font-mono">108.5%</div>
                                     <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1 flex items-center gap-1">
-                                        <Clock className="w-3.5 h-3.5 text-indigo-400" /> Response SLA
+                                        <TrendingUp className="w-3.5 h-3.5 text-indigo-400" /> Net Revenue Retention
                                     </div>
-                                    <p className="text-[10px] text-slate-500">First reply support time</p>
+                                    <p className="text-[10px] text-slate-500 font-sans">Adoption &amp; expansion indicator</p>
                                 </div>
                                 <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
                                     <Clock className="w-4 h-4 text-indigo-400" />
@@ -842,7 +996,7 @@ export default function SuperAdminCRMPage() {
                                     <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1 flex items-center gap-1">
                                         <Sparkles className="w-3.5 h-3.5 text-yellow-400" /> CSAT Score
                                     </div>
-                                    <p className="text-[10px] text-slate-500">Support satisfaction ratio</p>
+                                    <p className="text-[10px] text-slate-500 font-sans">Customer satisfaction ratio</p>
                                 </div>
                                 <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
                                     <Star className="w-4 h-4 text-yellow-400 star-filled" />
@@ -850,30 +1004,30 @@ export default function SuperAdminCRMPage() {
                             </div>
                         </div>
 
-                        {/* CRM stats card */}
+                        {/* CS Playbook Metrics Card */}
                         <div className="glass-card rounded-2xl p-6 border border-border/60">
                             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-                                <Info className="w-4 h-4 text-indigo-400" /> CRM Operational Performance
+                                <Info className="w-4 h-4 text-indigo-400" /> Customer Success Adoption Metrics
                             </h4>
                             <p className="text-[10px] text-slate-500 leading-normal mb-4">
-                                Aggregated cohort retention models and support resolution performance indexes.
+                                Strategic KPIs monitoring renewals, upsell expansion velocity, and referral program conversions.
                             </p>
                             <div className="p-4 bg-slate-950/80 border border-white/5 rounded-xl space-y-3 font-mono text-[11px] text-slate-400">
                                 <div className="flex justify-between">
-                                    <span>Average ticket resolution speed:</span>
-                                    <span className="text-white font-bold">2.4 hours</span>
+                                    <span>Contract Renewal Rate:</span>
+                                    <span className="text-emerald-400 font-bold">91.2% (Target: &gt;90%)</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span>Logo churn rate (Monthly):</span>
-                                    <span className="text-emerald-400 font-bold">4.2% (Target: &lt;5%)</span>
+                                    <span>Active Upsell Expansion Rate:</span>
+                                    <span className="text-emerald-400 font-bold">18.4% of accounts upgraded</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Advocacy Referral Conversion Rate:</span>
+                                    <span className="text-emerald-400 font-bold">8.5% referral links shared</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Smart Retry Billing recovery rate:</span>
-                                    <span className="text-emerald-400 font-bold">88.5% of failed card updates</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>Active locations managed:</span>
-                                    <span className="text-white font-bold">148 total GBP profiles</span>
+                                    <span className="text-white font-bold">88.5% of failed card updates</span>
                                 </div>
                             </div>
                         </div>
@@ -886,7 +1040,7 @@ export default function SuperAdminCRMPage() {
                                 <CheckCircle className="w-4.5 h-4.5 text-emerald-400" /> Part 13 Deliverables
                             </h3>
                             <p className="text-xs text-slate-400 leading-relaxed mb-6">
-                                Toggle gates to approve Customer Success and Ops milestones.
+                                Toggle gates to approve Customer Success and Playbook milestones.
                             </p>
 
                             <div className="space-y-3">
@@ -921,8 +1075,8 @@ export default function SuperAdminCRMPage() {
                                     style={{ width: `${(doneDels / deliverables.length) * 100}%` }} />
                             </div>
                             {doneDels === deliverables.length && (
-                                <div className="pt-2 flex items-center gap-2 text-emerald-400 text-xs font-bold">
-                                    <CheckCircle className="w-4 h-4" /> Part 13 Complete — Operations SOP Active!
+                                <div className="pt-2 flex items-center gap-2 text-emerald-400 text-xs font-bold animate-pulse">
+                                    <CheckCircle className="w-4 h-4" /> Part 13 Complete — Customer Success Playbook active!
                                 </div>
                             )}
                         </div>

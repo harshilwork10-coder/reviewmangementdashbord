@@ -58,10 +58,10 @@ ReviewManagement is a SaaS platform that helps businesses collect, monitor, resp
 
 | Tier | Price (Monthly) | Key Focus | Key Features |
 | :--- | :--- | :--- | :--- |
-| **Starter** | $29 | 1 Location | Basic monitoring, Review requests, Email support |
-| **Growth** | $79 | Multiple Locations | AI-powered replies, Advanced analytics reporting, Priority support |
-| **Agency** | $199 | Multi-Client Management | White-label reporting, Client management portal |
-| **Enterprise** | Custom | Custom Integrations | Custom integrations, Dedicated account manager, Advanced permissions, SLA support |
+| **Starter** | $49 | 1 Location | 250 Requests, Email campaigns, Basic Dashboard, Standard Support |
+| **Growth** | $99 | 3 Locations | 1,000 Requests, Email & SMS, Advanced reporting, Priority Support |
+| **Agency** | $299 | Up to 10 Clients | Agency Dashboard, Multi-Client Reporting, Client Management, Priority Agency Support |
+| **Enterprise** | Custom | Custom Integrations | Unlimited locations, Dedicated Success Manager, Custom reporting, SLA support |
 
 ---
 
